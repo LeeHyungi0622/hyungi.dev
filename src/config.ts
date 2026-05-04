@@ -48,7 +48,7 @@ export const siteConfig = {
    * Should be the full production URL without trailing slash.
    * Example: 'https://example.com'
    */
-  url: getEnv('SITE_URL', 'https://example.com'),
+  url: getEnv('SITE_URL', 'https://hyungi.dev'),
   
   /**
    * Site language (ISO 639-1 code)
@@ -56,14 +56,14 @@ export const siteConfig = {
    * Two-letter language code for HTML lang attribute and SEO.
    * Examples: 'en', 'id', 'es', 'fr'
    */
-  language: getEnv('SITE_LANGUAGE', 'en'),
+  language: getEnv('SITE_LANGUAGE', 'ko'),
   
   /**
    * Site title
    * 
    * Used as fallback when page-specific title is not provided.
    */
-  title: getEnv('SITE_TITLE', 'Professional Portfolio'),
+  title: getEnv('SITE_TITLE', 'Hyungi\'s Portfolio'),
   
   /**
    * Site description
@@ -80,19 +80,19 @@ export const siteConfig = {
    */
   author: {
     /** Full name */
-    name: getEnv('SITE_AUTHOR_NAME', 'Your Name'),
+    name: getEnv('SITE_AUTHOR_NAME', 'Lee Hyungi'),
     
     /** Professional title or role */
-    title: getEnv('SITE_AUTHOR_TITLE', 'Senior Software Engineer'),
+    title: getEnv('SITE_AUTHOR_TITLE', 'Infrastructure & Backend Engineer'),
     
     /** Short biography or professional summary */
     bio: getEnv('SITE_AUTHOR_BIO', 'Engineering leader focused on solving complex technical challenges through thoughtful architecture and pragmatic trade-off analysis.'),
     
     /** Contact email address */
-    email: getEnv('SITE_AUTHOR_EMAIL', 'hello@example.com'),
+    email: getEnv('SITE_AUTHOR_EMAIL', 'michael.hyungi.lee@gmail.com'),
     
     /** Location (optional, empty string to hide) */
-    location: getEnv('SITE_AUTHOR_LOCATION', ''),
+    location: getEnv('SITE_AUTHOR_LOCATION', 'Seoul, South Korea'),
   },
   
   /**
@@ -103,7 +103,7 @@ export const siteConfig = {
    */
   social: {
     /** GitHub profile URL */
-    github: getEnv('SOCIAL_GITHUB', ''),
+    github: getEnv('SOCIAL_GITHUB', 'https://github.com/LeeHyungi0622'),
     
     /** LinkedIn profile URL */
     linkedin: getEnv('SOCIAL_LINKEDIN', ''),
