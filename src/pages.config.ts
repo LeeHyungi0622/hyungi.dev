@@ -65,7 +65,7 @@ export const pagesConfig = {
     title: 'Projects - Case Studies',
     description: 'Detailed case studies showcasing problem-solving approach, technical decisions, and measurable impact across various engineering projects.',
     heading: 'Projects',
-    intro: 'Case studies that demonstrate how I approach complex problems, make technical decisions, and deliver measurable impact. Each project tells the story of the challenge, the constraints, the decisions made, and the outcomes achieved.',
+    intro: '실무에서의 각 케이스들은 제가 복잡한 문제에 접근하는 방식, 기술적 의사결정 과정, 그리고 수치로 입증 가능한 성과를 보여줍니다. 각 프로젝트에는 당면한 도전과 제약 속에서 내린 결정들, 그리고 그를 통해 이뤄낸 성취의 이야기가 담겨 있습니다.',
   },
   
   /**

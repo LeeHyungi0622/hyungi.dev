@@ -81,6 +81,7 @@ const {
   teamSize,
   outcomeSummary,
   overview,
+  architectureImage,
   problem,
   constraints,
   approach,
@@ -177,6 +178,17 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     <section class="case-study-section">
       <h2>Overview</h2>
       <p>{overview}</p>
+      {architectureImage && (
+        <figure class="architecture-figure">
+          <img
+            src={architectureImage.src}
+            alt={architectureImage.alt}
+            class="architecture-image"
+            loading="lazy"
+          />
+          <figcaption>{architectureImage.alt}</figcaption>
+        </figure>
+      )}
     </section>
 
     <!-- Problem Section -->
@@ -451,6 +463,25 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       position: absolute;
       left: 0;
       color: var(--color-accent);
+    }
+
+    .architecture-figure {
+      margin: 2rem 0 0;
+      padding: 0;
+    }
+
+    .architecture-image {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      display: block;
+    }
+
+    .architecture-figure figcaption {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      text-align: center;
+      margin-top: 0.75rem;
     }
 
     .impact-qualitative {

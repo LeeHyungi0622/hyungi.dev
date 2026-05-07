@@ -59,6 +59,12 @@ const projectsCollection = defineCollection({
     
     /** High-level project overview */
     overview: z.string(),
+
+    /** Architecture diagram for the overview section */
+    architectureImage: z.object({
+      src: z.string(),
+      alt: z.string(),
+    }).optional(),
     
     /** Problem being addressed */
     problem: z.string(),
