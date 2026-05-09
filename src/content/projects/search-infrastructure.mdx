@@ -1,8 +1,8 @@
 ---
-title: "E-commerce Search Infrastructure"
+title: "웹 리소스 경량화를 통한 운영 비용 최적화"
 role: "Senior Backend Engineer"
-year: 2024
-outcomeSummary: "Rebuilt search infrastructure handling 10M+ queries/day, improving relevance scores by 45% and reducing p99 latency to under 100ms"
+year: 2025
+outcomeSummary: "홈페이지 전체 리소스 용량을 57.9MB → 15.3MB로 줄여 클라우드 배포 플랜 초과 비용 제거"
 overview: "Led the redesign of search infrastructure for an e-commerce platform, replacing a basic database-backed search with a modern, ML-enhanced search system"
 problem: "The existing search was a simple LIKE query against PostgreSQL. It couldn't handle typos, synonyms, or relevance ranking. Search conversion rates were poor, and the system couldn't scale beyond 1000 QPS without significant latency degradation."
 constraints:
@@ -49,8 +49,8 @@ learnings:
   - "CDC is powerful but adds operational complexity—invest in monitoring and alerting"
   - "Search is a product, not just a feature—dedicate resources to continuous improvement"
   - "Elasticsearch cluster management requires dedicated expertise"
-featured: false
-order: 4
+featured: true
+order: 3
 ---
 
 ## Relevance Tuning Journey
