@@ -142,7 +142,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
   />
 
   <main class="case-study">
-    <!-- Case Study Header -->
+    <!-- Case Study Header (full width) -->
     <header class="case-study-header">
       <div class="header-badges">
         {status && status !== 'completed' && (
@@ -174,126 +174,136 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       <p class="outcome-summary">{outcomeSummary}</p>
     </header>
 
-    <!-- Overview Section -->
-    <section class="case-study-section">
-      <h2>Overview</h2>
-      <p>{overview}</p>
-      {architectureImage && (
-        <figure class="architecture-figure">
-          <img
-            src={architectureImage.src}
-            alt={architectureImage.alt}
-            class="architecture-image"
-            loading="lazy"
-          />
-          <figcaption>{architectureImage.alt}</figcaption>
-        </figure>
-      )}
-    </section>
+    <!-- 2-column body -->
+    <div class="case-study-body">
 
-    <!-- Problem Section -->
-    <section class="case-study-section">
-      <h2>Problem</h2>
-      <p>{problem}</p>
-    </section>
+      <!-- Left: Overview + supporting info -->
+      <div class="case-study-main">
+        <section class="case-study-section">
+          <h2>Overview</h2>
+          <p>{overview}</p>
+          {architectureImage && (
+            <figure class="architecture-figure">
+              <img
+                src={architectureImage.src}
+                alt={architectureImage.alt}
+                class="architecture-image"
+                loading="lazy"
+              />
+              <figcaption>{architectureImage.alt}</figcaption>
+            </figure>
+          )}
+        </section>
 
-    <!-- Constraints Section -->
-    <section class="case-study-section">
-      <h2>Constraints</h2>
-      <ul class="constraints-list">
-        {constraints.map((constraint) => (
-          <li>{constraint}</li>
-        ))}
-      </ul>
-    </section>
+        <section class="case-study-section">
+          <h2>Constraints</h2>
+          <ul class="constraints-list">
+            {constraints.map((constraint) => (
+              <li>{constraint}</li>
+            ))}
+          </ul>
+        </section>
 
-    <!-- Approach Section -->
-    <section class="case-study-section">
-      <h2>Approach</h2>
-      <p>{approach}</p>
-    </section>
+        <section class="case-study-section">
+          <h2>Tech Stack</h2>
+          <ul class="tech-stack-list">
+            {techStack.map((tech) => (
+              <li>{tech}</li>
+            ))}
+          </ul>
+        </section>
 
-    <!-- Key Decisions Section -->
-    <section class="case-study-section">
-      <h2>Key Decisions</h2>
-      <div class="decisions-list">
-        {keyDecisions.map((decision) => (
-          <div class="decision-item">
-            <h3 class="decision-title">{decision.decision}</h3>
-            <div class="decision-reasoning">
-              <strong>Reasoning:</strong>
-              <p>{decision.reasoning}</p>
-            </div>
-            {decision.alternatives && decision.alternatives.length > 0 && (
-              <div class="decision-alternatives">
-                <strong>Alternatives considered:</strong>
-                <ul>
-                  {decision.alternatives.map((alt) => (
-                    <li>{alt}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ))}
+        <section class="case-study-section">
+          <h2>Learnings</h2>
+          <ul class="learnings-list">
+            {learnings.map((learning) => (
+              <li>{learning}</li>
+            ))}
+          </ul>
+        </section>
+
+        {Content && (
+          <section class="case-study-content">
+            <Content />
+          </section>
+        )}
       </div>
-    </section>
 
-    <!-- Tech Stack Section -->
-    <section class="case-study-section">
-      <h2>Tech Stack</h2>
-      <ul class="tech-stack-list">
-        {techStack.map((tech) => (
-          <li>{tech}</li>
-        ))}
-      </ul>
-    </section>
+      <!-- Right: Core narrative (sticky) -->
+      <div class="case-study-sidebar">
+        <section class="case-study-section">
+          <h2>Problem</h2>
+          <p>{problem}</p>
+        </section>
 
-    <!-- Result/Impact Section -->
-    <section class="case-study-section">
-      <h2>Result & Impact</h2>
-      
-      {/* Display metrics with visualization */}
-      {impact.metrics && impact.metrics.length > 0 && (
-        <ImpactMetrics metrics={impact.metrics} />
-      )}
-      
-      <p class="impact-qualitative">{impact.qualitative}</p>
-    </section>
+        <section class="case-study-section">
+          <h2>Approach</h2>
+          <p>{approach}</p>
+        </section>
 
-    <!-- Learnings Section -->
-    <section class="case-study-section">
-      <h2>Learnings</h2>
-      <ul class="learnings-list">
-        {learnings.map((learning) => (
-          <li>{learning}</li>
-        ))}
-      </ul>
-    </section>
+        <section class="case-study-section">
+          <h2>Key Decisions</h2>
+          <div class="decisions-list">
+            {keyDecisions.map((decision) => (
+              <div class="decision-item">
+                <h3 class="decision-title">{decision.decision}</h3>
+                <div class="decision-reasoning">
+                  <strong>Reasoning:</strong>
+                  <p>{decision.reasoning}</p>
+                </div>
+                {decision.alternatives && decision.alternatives.length > 0 && (
+                  <div class="decision-alternatives">
+                    <strong>Alternatives considered:</strong>
+                    <ul>
+                      {decision.alternatives.map((alt) => (
+                        <li>{alt}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
 
-    <!-- Additional MDX Content (if any) -->
-    {Content && (
-      <section class="case-study-content">
-        <Content />
-      </section>
-    )}
+        <section class="case-study-section">
+          <h2>Result & Impact</h2>
+          {impact.metrics && impact.metrics.length > 0 && (
+            <ImpactMetrics metrics={impact.metrics} />
+          )}
+          <p class="impact-qualitative">{impact.qualitative}</p>
+        </section>
 
-    <!-- Related Content -->
-    <RelatedContent 
-      relatedProjects={relatedProjects} 
-      relatedDecisions={relatedDecisions} 
-    />
+        <RelatedContent
+          relatedProjects={relatedProjects}
+          relatedDecisions={relatedDecisions}
+        />
 
-    <BackLink href="/projects" text="All projects" />
+        <BackLink href="/projects" text="All projects" />
+      </div>
+
+    </div>
   </main>
 
   <ScrollToTop />
 
   <style>
     .case-study {
-      max-width: 800px;
+      max-width: 1700px;
       margin: 0 auto;
       padding: 2rem 1.5rem;
+    }
+
+    .case-study-body {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .case-study-sidebar {
+      position: sticky;
+      top: 5rem;
     }
 
     .case-study-header {
@@ -495,6 +505,16 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       font-size: 1.0625rem;
       line-height: 1.7;
       color: var(--color-text-secondary);
+    }
+
+    @media (max-width: 1024px) {
+      .case-study-body {
+        grid-template-columns: 1fr;
+      }
+
+      .case-study-sidebar {
+        position: static;
+      }
     }
 
     @media (max-width: 768px) {

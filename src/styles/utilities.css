@@ -5,7 +5,7 @@
    ============================================ */
 
 .page-container {
-  max-width: 800px;
+  max-width: 1700px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
 }
@@ -53,13 +53,13 @@
    ============================================ */
 
 .card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
 }
 
 .card-list--compact {
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 /* ============================================
@@ -76,6 +76,12 @@
    RESPONSIVE
    ============================================ */
 
+@media (max-width: 1024px) {
+  .card-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .page-container {
     padding: 1.5rem 1rem;
@@ -87,6 +93,10 @@
 
   .page-intro {
     font-size: 1rem;
+  }
+
+  .card-list {
+    grid-template-columns: 1fr;
   }
 
   .tags-list {

@@ -37,7 +37,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SEO from '../components/SEO.astro';
 import StructuredData from '../components/StructuredData.astro';
 import ForwardLink from '../components/ForwardLink.astro';
-import Testimonials from '../components/Testimonials.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config';
 
@@ -51,15 +50,9 @@ const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
   .filter(project => project.data.featured === true)
   .sort((a, b) => (a.data.order || 999) - (b.data.order || 999))
-  .slice(0, 4);
+  .slice(0, 6);
 
-/**
- * Case snapshots for hero display
- * 
- * Takes up to 3 featured projects to showcase in the hero section,
- * providing immediate evidence of impact and outcomes.
- */
-const caseSnapshots = featuredProjects.slice(0, 3);
+const caseSnapshots = featuredProjects;
 
 /**
  * Queries recent decisions for preview section
@@ -92,22 +85,27 @@ const recentDecisions = allDecisions
       <div class="hero-grid">
         <!-- Left: Value Statement -->
         <div class="hero-left">
-          <h1 class="hero-title">
-            단순히 프로젝트를 완성하는데<br/>집중하지 않습니다!<br/><br/>
-            <span class="hero-sub">비즈니스 목표가 지향하는 바를 이해하고, <br/>그 위에 내린 결정과 트레이드오프, 그리고 결과를 기록합니다.</span><br/><br/>
-            <span class="hero-sub">그 결과에 따른 개선점 또한 기록하여<br/>더 나은 결정을 하기 위한 초석으로 삼습니다.</span><br/><br/>
-          </h1>
+          <div class="hero-sub">
+            단순히 프로젝트를 완성하는데 집중하지 않습니다!<br/><br/>
+            <span class="hero-sub"><span class="hero-sub-em">비즈니스 목표</span>가 지향하는 바를 이해하고,<br/>그 위에 내린 <span class="hero-sub-em">결정</span>과 <span class="hero-sub-em">트레이드오프</span>, 그리고 <span class="hero-sub-em">결과</span>를 기록합니다.</span><br/><br/>
+            <span class="hero-sub">그 결과에 따른 <span class="hero-sub-em">개선점</span> 또한 <span class="hero-sub-em">기록</span>하여 <span class="hero-sub-em">더 나은 결정</span>을 하기 위한 초석으로 삼습니다.</span><br/><br/>
+          </div>
           <p class="hero-meta">
             {siteConfig.author.name} · {siteConfig.author.title}
           </p>
-          <div class="hero-cta">
-            <a href="/projects" class="btn-primary">실무 케이스 살펴보기</a>
-            <a href="/decisions" class="btn-secondary">논리와 결정 과정</a>
+          <div class="hero-intro">
+            <p>I'm {siteConfig.author.name}, {siteConfig.author.title.toLowerCase()} focused on building systems that move real business metrics.</p>
+            <p>Every major decision is documented—because great engineers don't just build things, they explain why.</p>
+            <ForwardLink href="/journey" text="Read my journey" variant="muted" />
           </div>
         </div>
 
         <!-- Right: Case Snapshots -->
         <div class="hero-right">
+          <div class="section-header">
+            <h2>실무 케이스</h2>
+            <ForwardLink href="/projects" text="View all" variant="muted" />
+          </div>
           <div class="case-snapshots">
             {caseSnapshots.map((project) => (
               <a href={`/projects/${project.id}`} class="case-snapshot">
@@ -121,78 +119,55 @@ const recentDecisions = allDecisions
       </div>
     </section>
 
-    <!-- Introduction -->
-    <section class="introduction">
-      <p>
-        I'm {siteConfig.author.name}, {siteConfig.author.title.toLowerCase()} focused on building systems that move real business metrics.
-      </p>
-      <p>
-        Every major decision is documented—because great engineers don't just build things, they explain why.
-      </p>
-      <ForwardLink href="/journey" text="Read my journey" variant="muted" />
-    </section>
-
-    <!-- Recent Decisions -->
-    <section class="recent-decisions">
-      <div class="section-header">
-        <h2>Recent Decisions</h2>
-        <ForwardLink href="/decisions" text="View all" variant="muted" />
-      </div>
-      
-      {recentDecisions.length > 0 ? (
-        <div class="decisions-list">
-          {recentDecisions.map((decision) => {
-            const date = new Date(decision.data.date);
-            const formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-            return (
-              <article class="decision-item">
-                <span class="decision-date">{formattedDate}</span>
-                <h3 class="decision-title">{decision.data.title}</h3>
-                <p class="decision-context">{decision.data.context}</p>
-              </article>
-            );
-          })}
+    <div class="two-col-sections">
+      <!-- Recent Decisions -->
+      <section class="recent-decisions">
+        <div class="section-header">
+          <h2>Recent Decisions</h2>
+          <ForwardLink href="/decisions" text="View all" variant="muted" />
         </div>
-      ) : (
-        <p class="no-decisions">No decisions documented yet.</p>
-      )}
-    </section>
 
-    <!-- Testimonials -->
-    <Testimonials limit={3} />
+        {recentDecisions.length > 0 ? (
+          <div class="decisions-list">
+            {recentDecisions.map((decision) => {
+              const date = new Date(decision.data.date);
+              const formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+              return (
+                <article class="decision-item">
+                  <span class="decision-date">{formattedDate}</span>
+                  <h3 class="decision-title">{decision.data.title}</h3>
+                  <p class="decision-context">{decision.data.context}</p>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <p class="no-decisions">No decisions documented yet.</p>
+        )}
+      </section>
 
-    <!-- What I Think About -->
-    <section class="thinking">
-      <h2>Problems I Enjoy Solving</h2>
-      <p class="thinking-list">
-        How to scale systems without scaling complexity · When to choose consistency over availability · Making legacy codebases maintainable · Designing APIs that last · Building teams that ship · Turning technical debt into technical investment · Documenting decisions so future-you understands past-you
-      </p>
-    </section>
+      <!-- What I Think About -->
+      <section class="thinking">
+        <h2>Problems I Enjoy Solving</h2>
+        <p class="thinking-list">
+          How to scale systems without scaling complexity · When to choose consistency over availability · Making legacy codebases maintainable · Designing APIs that last · Building teams that ship · Turning technical debt into technical investment · Documenting decisions so future-you understands past-you
+        </p>
+      </section>
+    </div>
 
-    <!-- CTA -->
-    <section class="cta">
-      <h2>Let's Work Together</h2>
-      <p>
-        Looking for technical leadership, architectural guidance, or someone who documents their thinking? Let's talk.
-      </p>
-      <div class="cta-buttons">
-        <a href="/projects" class="btn-primary">View My Work</a>
-        <a href="/contact" class="btn-secondary">Get in Touch</a>
-      </div>
-    </section>
   </main>
 
   <style>
     .home-page {
-      max-width: 1100px;
+      max-width: 1700px;
       margin: 0 auto;
-      padding: 0 1.5rem 4rem;
+      padding: 0 1.5rem 2rem;
     }
 
     .hero {
-      padding: 4rem 0 5rem;
+      padding: 2rem 0 2rem;
       border-bottom: 1px solid var(--color-border);
-      margin-bottom: 4rem;
+      margin-bottom: 2rem;
     }
 
     .hero-grid {
@@ -203,6 +178,10 @@ const recentDecisions = allDecisions
     }
 
     .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 100%;
       padding-right: 2rem;
     }
 
@@ -226,6 +205,12 @@ const recentDecisions = allDecisions
       line-height: 1.6;
     }
 
+    .hero-sub-em {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--color-text)
+    }
+
     .hero-meta {
       font-size: 0.875rem;
       color: var(--color-text-muted);
@@ -235,6 +220,7 @@ const recentDecisions = allDecisions
 
     .hero-cta {
       display: flex;
+      justify-content: center;
       gap: 1rem;
     }
 
@@ -276,9 +262,9 @@ const recentDecisions = allDecisions
     }
 
     .case-snapshots {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
     }
 
     .case-snapshot {
@@ -322,25 +308,28 @@ const recentDecisions = allDecisions
       line-height: 1.5;
     }
 
-    .introduction {
-      max-width: 600px;
-      margin-bottom: 5rem;
+    .hero-intro {
+      margin-top: 1.5rem;
       font-size: 1.125rem;
       line-height: 1.7;
       color: var(--color-text-secondary);
     }
 
-    .introduction p {
+    .hero-intro p {
       margin-bottom: 1rem;
     }
 
-    .introduction p:first-child {
+    .hero-intro p:first-child {
       color: var(--color-text);
     }
 
-    .recent-decisions {
-      margin-bottom: 5rem;
+    .two-col-sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
     }
+
+    .recent-decisions {}
 
     .section-header {
       display: flex;
@@ -416,33 +405,8 @@ const recentDecisions = allDecisions
       font-size: 1.0625rem;
       line-height: 1.9;
       color: var(--color-text-secondary);
-      max-width: 680px;
     }
 
-    .cta {
-      padding: 3rem 0;
-      border-top: 1px solid var(--color-border);
-    }
-
-    .cta h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.01em;
-    }
-
-    .cta p {
-      font-size: 1rem;
-      color: var(--color-text-secondary);
-      margin-bottom: 1.5rem;
-      max-width: 500px;
-      line-height: 1.6;
-    }
-
-    .cta-buttons {
-      display: flex;
-      gap: 1rem;
-    }
 
     @media (max-width: 768px) {
       .home-page {
@@ -476,12 +440,21 @@ const recentDecisions = allDecisions
         width: 100%;
       }
 
+      .case-snapshots {
+        grid-template-columns: 1fr;
+      }
+
       .case-snapshot {
         padding: 1rem 1.25rem;
       }
 
-      .introduction {
+      .hero-intro {
         font-size: 1rem;
+      }
+
+      .two-col-sections {
+        grid-template-columns: 1fr;
+        gap: 3rem;
       }
 
       .section-header {
@@ -494,14 +467,6 @@ const recentDecisions = allDecisions
         font-size: 1rem;
       }
 
-      .cta-buttons {
-        flex-direction: column;
-      }
-
-      .cta-buttons .btn-primary,
-      .cta-buttons .btn-secondary {
-        width: 100%;
-      }
     }
   </style>
 </BaseLayout>
