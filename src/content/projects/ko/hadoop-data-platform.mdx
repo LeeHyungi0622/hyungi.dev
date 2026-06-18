@@ -1,0 +1,60 @@
+---
+title: "Hadoop 에코시스템 기반 엔터프라이즈 데이터 플랫폼 구축"
+role: "Data Engineer, Senior Backend Engineer"
+year: 2023
+duration: "8개월"
+teamSize: 6
+outcomeSummary: "흩어진 데이터 소스를 중앙 레이크하우스로 통합하는 Hadoop 기반 엔터프라이즈 데이터 플랫폼을 구축하여 비즈니스 팀의 셀프서비스 분석 환경 제공"
+overview: "Hadoop 에코시스템을 활용한 중앙 집중식 데이터 플랫폼의 설계 및 구현을 리드했습니다. 여러 운영 데이터베이스와 외부 소스에서 데이터를 수집하고, 메달리온 아키텍처 기반의 구조화된 데이터 레이크하우스 레이어를 제공하며, 분석 및 리포팅을 위한 SQL 기반 쿼리 인터페이스를 노출합니다."
+problem: "비즈니스 팀들이 Excel 파일, 개별 데이터베이스 내보내기, 임시 스크립트에 분산된 데이터 복사본으로 작업하고 있었습니다. 비즈니스 지표에 대한 단일 진실 소스(Single Source of Truth)가 없었고, 각 팀이 자체 데이터 파이프라인을 유지하여 서로 다른 리포트가 충돌하고, 2명의 분석가가 매월 이틀씩 수동 데이터 대사 작업에 투입되는 상황이었습니다."
+constraints:
+  - "이기종 소스 시스템 5개 이상과 연동 필요 (Oracle, MySQL, MongoDB, REST API)"
+  - "마이그레이션 중에도 기존 운영 데이터 파이프라인 유지"
+  - "분석 쿼리 SLA: 표준 리포트 30초 이내 응답"
+  - "8개월 단계적 납품"
+  - "컴플라이언스 팀의 데이터 거버넌스 및 접근 제어 요건"
+approach: "HDFS 위에 메달리온 아키텍처(Bronze/Silver/Gold)를 채택하고 Apache Hive를 메타스토어로 사용했습니다. RDBMS 소스는 Apache Sqoop, 반정형 소스는 커스텀 Spark 작업으로 수집 파이프라인을 구축했습니다. Apache Griffin을 사용하여 각 티어의 데이터 품질 검사를 구현했습니다."
+keyDecisions:
+  - decision: "메달리온(Bronze/Silver/Gold) 레이크하우스 아키텍처"
+    reasoning: "원시 수집(Bronze), 정제(Silver), 집계(Gold) 레이어를 분리하면 소비자가 필요한 수준의 데이터에 접근할 수 있습니다. 비즈니스 정의가 변경될 때 재처리를 위해 원시 데이터를 항상 보존합니다."
+    alternatives:
+      - "스테이징 영역이 있는 전통적인 EDW"
+      - "계층 구분 없는 단순 데이터 레이크"
+  - decision: "Apache Hive를 기본 SQL 인터페이스로 채택"
+    reasoning: "HiveQL은 SQL에 익숙한 분석가들에게 친숙합니다. Hive Metastore는 Spark, Presto, BI 도구 모두가 공유할 수 있는 중앙 스키마 레지스트리를 제공하여 스키마 불일치를 방지합니다."
+    alternatives:
+      - "Presto/Trino를 기본 SQL 엔진으로"
+      - "Apache Impala"
+  - decision: "Apache Oozie로 워크플로우 오케스트레이션"
+    reasoning: "팀에 기존 Oozie 운용 경험이 있었고, Hadoop 네이티브 도구셋(HDFS, MapReduce, Hive)과 추가 인프라 없이 긴밀하게 통합됩니다."
+    alternatives:
+      - "Apache Airflow"
+      - "Luigi"
+techStack:
+  - "Apache Hadoop (HDFS)"
+  - "Apache Hive"
+  - "Apache Spark"
+  - "Apache Sqoop"
+  - "Apache Oozie"
+  - "Apache Griffin (데이터 품질)"
+  - "Presto"
+  - "Java"
+  - "YARN"
+impact:
+  metrics:
+    - label: "통합 데이터 소스"
+      value: "이기종 소스 시스템 7개 통합"
+    - label: "리포트 생성 시간"
+      value: "수 시간(수동) → 30초 이내(자동화)"
+    - label: "셀프서비스 비즈니스 팀"
+      value: "6개월 내 4개 팀 분석 환경 독립"
+  qualitative: "비즈니스 팀들이 이제 전사 지표에 대한 단일 진실 소스를 조회할 수 있게 됐습니다. 매월 2명의 분석가가 이틀씩 투입되던 수동 데이터 대사 작업이 완전히 없어졌습니다. 이 플랫폼은 이후 ML/AI 이니셔티브의 기반이 됐습니다."
+learnings:
+  - "데이터 거버넌스는 첫 데이터가 수집되기 전에 설계해야 함 — 접근 제어를 나중에 추가하는 것은 매우 힘들고 느린 작업"
+  - "데이터 레이크의 스키마 진화는 신중한 계획이 필요 — Hive ALTER TABLE은 전통적인 RDBMS 마이그레이션만큼 안전하지 않음"
+  - "데이터 카탈로그에 초기 투자하는 것이 효과적 — 없으면 소비자가 어떤 데이터가 있는지 파악하기 어려움"
+  - "Hadoop 운영 복잡성은 상당히 높음 — 온프레미스 배포를 결정하기 전에 전담 운영 인력을 확보해야 함"
+featured: false
+status: completed
+order: 4
+---

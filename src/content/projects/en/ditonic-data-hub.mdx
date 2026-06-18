@@ -1,0 +1,56 @@
+---
+title: "Ditonic Data Hub Platform Enhancement"
+role: "Senior Backend Engineer"
+year: 2024
+duration: "6 months"
+teamSize: 4
+outcomeSummary: "Enhanced Ditonic's data hub platform with improved API throughput, an extensible connector SDK, and full pipeline execution visibility — cutting new connector development time from weeks to days"
+overview: "Led backend engineering for the second-generation enhancement of Ditonic's data hub platform — a B2B middleware product that connects enterprise data sources to downstream analytics and reporting tools. The project focused on improving API throughput, reliability, and the ease of adding new data source connectors."
+problem: "The first-generation data hub had performance bottlenecks at high data volumes due to N+1 query patterns and synchronous connector execution. Adding a new connector required significant engineering effort as each connector had to re-implement transport protocol handling (HTTP retries, OAuth refresh, pagination). Customers and the support team had no visibility into pipeline execution status, making failure diagnosis slow and painful."
+constraints:
+  - "Backward compatibility with existing customer integrations (no breaking API changes)"
+  - "API response time must improve without changing the public API contract"
+  - "New connector framework must support existing connector implementations"
+  - "6-month timeline with quarterly feature deliveries"
+approach: "Profiled the existing API layer to identify bottlenecks — found N+1 query patterns and synchronous blocking calls in the connector execution path. Replaced connector execution with an async task queue model. Designed a connector SDK that abstracts transport protocol details, allowing connectors to be implemented as focused data transformation functions."
+keyDecisions:
+  - decision: "Async task queue for connector execution"
+    reasoning: "Connectors involve external API calls with variable latency. Executing them synchronously in the API request thread creates head-of-line blocking. The async model allows the platform to handle bursts of integration requests without latency spikes."
+    alternatives:
+      - "Thread pool expansion (still synchronous)"
+      - "Dedicated microservice per connector"
+  - decision: "Connector SDK abstraction layer"
+    reasoning: "The old architecture required developers to implement transport protocol handling (HTTP retries, OAuth refresh, pagination) for every new connector. The SDK standardizes these concerns, reducing new connector development from weeks to days."
+    alternatives:
+      - "Open connector development with no SDK"
+      - "Low-code/no-code connector builder UI"
+  - decision: "Event-sourced pipeline execution log"
+    reasoning: "Customers frequently asked 'why did my pipeline fail?' The event-sourced log provides a complete, queryable audit trail of every pipeline run without adding instrumentation to individual connectors."
+    alternatives:
+      - "Centralized logging (Elasticsearch)"
+      - "Per-pipeline execution summary table"
+techStack:
+  - "Java 17 / Spring Boot"
+  - "Redis (task queue)"
+  - "PostgreSQL"
+  - "Apache Kafka (event streaming)"
+  - "REST / GraphQL (API layer)"
+  - "Docker / Kubernetes"
+impact:
+  metrics:
+    - label: "API Throughput"
+      value: "3× improvement under sustained load"
+    - label: "New Connector Development Time"
+      value: "Reduced from ~3 weeks to ~4 days"
+    - label: "Pipeline Execution Visibility"
+      value: "100% of execution events now queryable"
+  qualitative: "Customer onboarding time shortened significantly as new connectors can be built by a single engineer without deep platform knowledge. Support escalations related to pipeline failures decreased as customers can now self-diagnose from the execution log."
+learnings:
+  - "Performance profiling always reveals the bottleneck is not where you expect — measure before optimizing"
+  - "A well-designed SDK is a force multiplier; the time invested in SDK design pays back immediately on the first connector built with it"
+  - "Event sourcing for execution state adds upfront complexity but eliminates an entire class of support tickets"
+  - "Maintaining backward compatibility while improving internals requires disciplined API versioning and comprehensive integration test coverage"
+featured: false
+status: completed
+order: 6
+---

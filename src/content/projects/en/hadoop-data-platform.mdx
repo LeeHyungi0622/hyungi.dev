@@ -1,0 +1,60 @@
+---
+title: "Enterprise Data Platform with Hadoop Ecosystem"
+role: "Data Engineer, Senior Backend Engineer"
+year: 2023
+duration: "8 months"
+teamSize: 6
+outcomeSummary: "Designed and built a Hadoop-based enterprise data platform that unified siloed data sources into a centralized lakehouse, enabling self-serve analytics for business teams"
+overview: "Led the design and implementation of a centralized data platform using the Hadoop ecosystem. The platform ingests data from multiple operational databases and external sources, provides a structured data lakehouse layer via a medallion architecture, and exposes SQL-based query interfaces for analytics and reporting."
+problem: "Business teams were working with copies of data spread across Excel files, individual database exports, and ad hoc scripts. There was no single source of truth for business metrics, and each team maintained its own data pipelines. This led to conflicting reports and time-consuming monthly manual reconciliation work that occupied multiple analysts."
+constraints:
+  - "Must integrate with 5+ heterogeneous source systems (Oracle, MySQL, MongoDB, REST APIs)"
+  - "Existing operational data pipelines must keep running during the migration"
+  - "Analytics query SLA: sub-30-second response for standard reports"
+  - "8-month phased delivery"
+  - "Data governance and access control requirements from the compliance team"
+approach: "Adopted a medallion architecture (Bronze/Silver/Gold) on HDFS with Apache Hive as the metastore. Built ingestion pipelines using Apache Sqoop for RDBMS sources and custom Spark jobs for semi-structured sources. Implemented data quality checks at each tier using Apache Griffin to enforce schema contracts before data flows downstream."
+keyDecisions:
+  - decision: "Medallion (Bronze/Silver/Gold) lakehouse architecture"
+    reasoning: "Separating raw ingestion (Bronze) from curated (Silver) and aggregated (Gold) layers allows consumers to access data at the right fidelity for their needs. Raw data is always preserved for reprocessing when business definitions change."
+    alternatives:
+      - "Traditional EDW with staging area"
+      - "Flat data lake without curation layers"
+  - decision: "Apache Hive as primary SQL interface"
+    reasoning: "HiveQL is familiar to analysts used to SQL. Hive Metastore provides a centralized schema registry that Spark, Presto, and BI tools can all share, avoiding schema divergence."
+    alternatives:
+      - "Presto/Trino as primary SQL engine"
+      - "Apache Impala"
+  - decision: "Apache Oozie for workflow orchestration"
+    reasoning: "The team had existing Oozie expertise, and it integrates tightly with the Hadoop-native toolchain (HDFS, MapReduce, Hive) without additional infrastructure overhead."
+    alternatives:
+      - "Apache Airflow"
+      - "Luigi"
+techStack:
+  - "Apache Hadoop (HDFS)"
+  - "Apache Hive"
+  - "Apache Spark"
+  - "Apache Sqoop"
+  - "Apache Oozie"
+  - "Apache Griffin (data quality)"
+  - "Presto"
+  - "Java"
+  - "YARN"
+impact:
+  metrics:
+    - label: "Data Sources Unified"
+      value: "7 heterogeneous source systems integrated"
+    - label: "Report Generation Time"
+      value: "Hours (manual) → < 30 seconds (automated)"
+    - label: "Business Teams Onboarded"
+      value: "4 teams self-serving analytics within 6 months"
+  qualitative: "Business teams can now query a single source of truth for company-wide metrics. The manual data reconciliation process that previously occupied 2 analysts for 2 days each month was eliminated. The platform became the foundation for subsequent ML and AI initiatives."
+learnings:
+  - "Data governance must be designed before the first byte is ingested — retrofitting access controls is painful and slow"
+  - "Schema evolution in data lakes requires careful planning; Hive ALTER TABLE is not as safe as a traditional RDBMS migration"
+  - "Investing in a data catalog early pays off — without it, consumers cannot discover what data is available"
+  - "Hadoop operational complexity is non-trivial; ensure dedicated ops capacity before committing to on-premises deployment"
+featured: false
+status: completed
+order: 4
+---

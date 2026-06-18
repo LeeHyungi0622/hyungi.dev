@@ -1,0 +1,58 @@
+---
+title: "AI Smart Plant Monitoring Platform"
+role: "Senior Backend Engineer"
+year: 2024
+duration: "4 months"
+teamSize: 5
+outcomeSummary: "Built an AI-powered smart plant monitoring backend that processes IoT sensor data streams in real time and triggers predictive maintenance alerts, reducing unplanned equipment downtime"
+overview: "Developed the backend data pipeline and AI inference layer for a smart plant (factory) monitoring platform. The system collects real-time sensor data from industrial equipment, runs ML-based anomaly detection, and generates predictive maintenance recommendations for plant operators."
+problem: "The plant facility had hundreds of sensors generating continuous data streams, but existing monitoring was purely threshold-based — it could only alert on obvious failures, not predict them. Operators were reactive rather than proactive, resulting in unplanned equipment downtime that disrupted production schedules and increased maintenance costs."
+constraints:
+  - "Must process hundreds of concurrent sensor streams without data loss"
+  - "AI inference must complete within 500ms to be actionable for operators"
+  - "Integration with existing SCADA and PLC systems"
+  - "On-premises deployment due to plant security policy (no public cloud)"
+  - "4-month implementation window"
+approach: "Built a streaming data pipeline using Apache Kafka to ingest sensor data from edge gateways. Implemented a dedicated model-serving microservice for anomaly detection and Remaining Useful Life (RUL) prediction that processes each sensor stream independently. Built an operator dashboard with real-time alert feeds and maintenance recommendation cards."
+keyDecisions:
+  - decision: "Edge-to-cloud tiered processing"
+    reasoning: "High-frequency sensor data (1000Hz+) is pre-aggregated at the edge gateway before streaming to the backend. This reduces network bandwidth by ~90% while preserving the signal fidelity needed for anomaly detection."
+    alternatives:
+      - "Direct sensor-to-cloud streaming"
+      - "Batch polling from sensors"
+  - decision: "Separate model-serving service from data pipeline"
+    reasoning: "Decoupling allows the ML team to retrain and deploy new model versions without touching the data ingestion pipeline. Blue-green model deployment is possible without pipeline downtime."
+    alternatives:
+      - "Embedded inference inside the ingestion pipeline"
+      - "Scheduled batch ML jobs"
+  - decision: "On-premises Kubernetes cluster"
+    reasoning: "Plant security policy prohibits cloud deployment of operational data. Kubernetes provides the same orchestration capabilities on-premises with automated rollout and scaling."
+    alternatives:
+      - "Docker Compose (simpler ops)"
+      - "Bare-metal process management"
+techStack:
+  - "Python / FastAPI"
+  - "Apache Kafka"
+  - "Apache Flink"
+  - "PyTorch / ONNX Runtime"
+  - "TimescaleDB"
+  - "Kubernetes (on-premises)"
+  - "Grafana"
+impact:
+  metrics:
+    - label: "Anomaly Detection Latency"
+      value: "< 400ms from sensor event to operator alert"
+    - label: "Unplanned Downtime"
+      value: "Reduced by ~35% in pilot equipment set"
+    - label: "Concurrent Sensor Streams"
+      value: "300+ streams processed in real time"
+  qualitative: "Operators shifted from reactive incident response to proactive maintenance scheduling. Predictive maintenance recommendations allowed maintenance windows to be planned during scheduled downtime, significantly reducing production interruptions."
+learnings:
+  - "Sensor data quality is the hardest problem — noise, calibration drift, and sensor failures require robust preprocessing before any ML can work reliably"
+  - "On-premises Kubernetes is significantly more work to maintain than cloud-managed — factor this into operational cost estimates"
+  - "Anomaly detection models require continuous retraining as plant conditions change; a model deployment pipeline is not optional"
+  - "Operator trust in AI recommendations must be earned incrementally — start with advisory alerts, not automated actions"
+featured: false
+status: completed
+order: 3
+---

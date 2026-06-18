@@ -1,0 +1,57 @@
+---
+title: "V2X Data Integration for Autonomous Police Patrol Cars"
+role: "Data Engineer, Senior Backend Engineer"
+year: 2025
+duration: "6 months"
+teamSize: 4
+outcomeSummary: "Delivered V2X data communication middleware for the Korean National Police Agency's autonomous patrol car prototype, enabling real-time vehicle-to-infrastructure data exchange"
+overview: "Built the data communication layer for an autonomous patrol car prototype commissioned by the Korean National Police Agency. Collaborated with a communication/security module vendor (M사) to implement V2X (Vehicle-to-Everything) messaging middleware that bridges onboard sensors with roadside infrastructure units."
+problem: "The autonomous patrol car prototype required a reliable, low-latency data channel between the vehicle and roadside infrastructure. There was no standardized communication protocol in place, and the onboard sensor data needed to be validated, parsed, and routed in real time while meeting government security compliance requirements."
+constraints:
+  - "Government project security and compliance requirements"
+  - "Real-time V2X messaging latency must be under 100ms"
+  - "Must integrate with existing vehicle ECU interfaces"
+  - "Coordination required with external security module vendor (M사)"
+  - "6-month delivery timeline for prototype demonstration"
+approach: "Collaborated with the communication/security module vendor (M사) to define the V2X message protocol and data schema. Designed a middleware layer that handles message parsing, schema validation, and real-time routing via a message queue. Implemented a monitoring dashboard to visualize V2X data flow and alert on transmission anomalies during field testing."
+keyDecisions:
+  - decision: "Protocol Buffers for V2X message serialization"
+    reasoning: "Binary serialization reduces message size by ~60% compared to JSON, keeping per-message latency within the 100ms budget. The schema registry also enforces contract compatibility between the vehicle ECU and the infrastructure backend."
+    alternatives:
+      - "JSON over HTTP/REST"
+      - "Custom binary protocol"
+  - decision: "Kafka as the V2X data backbone"
+    reasoning: "Kafka's partitioned log provides replay capability for debugging and field test analysis. Multiple consumers (real-time dashboard, data lake, alerting) can independently subscribe without coupling."
+    alternatives:
+      - "Direct TCP socket communication"
+      - "MQTT for IoT messaging"
+  - decision: "Stateless middleware with Redis for session state"
+    reasoning: "Stateless design allows horizontal scaling during high-traffic field tests. Redis stores in-flight message state with TTL to handle vehicle reconnects gracefully."
+    alternatives:
+      - "Stateful middleware (embedded session)"
+      - "Database-backed session state"
+techStack:
+  - "Java 17 / Spring Boot"
+  - "Apache Kafka"
+  - "Protocol Buffers"
+  - "Redis"
+  - "Docker"
+  - "Linux (Ubuntu)"
+impact:
+  metrics:
+    - label: "V2X Message Latency"
+      value: "< 80ms end-to-end (target: < 100ms)"
+    - label: "Message Delivery Rate"
+      value: "99.8% during prototype field tests"
+    - label: "Prototype Milestone"
+      value: "Delivered on schedule for National Police Agency demonstration"
+  qualitative: "The prototype was successfully demonstrated to the Korean National Police Agency stakeholders. The V2X middleware layer provided a stable foundation for the autonomous driving team to layer higher-level decision logic on top of reliable, real-time infrastructure data."
+learnings:
+  - "Government projects require upfront alignment on compliance requirements — discovering these mid-project causes expensive rework"
+  - "Hardware interface constraints (ECU protocols) must be prototyped early; they are rarely as well documented as claimed"
+  - "Kafka replay was invaluable for debugging intermittent V2X transmission issues during field testing"
+  - "Cross-vendor collaboration requires explicit interface contracts — Protocol Buffers schema served as the living contract between teams"
+featured: true
+status: completed
+order: 1
+---

@@ -10,6 +10,5 @@ export async function getStaticPaths() {
     }));
 }
 
-const { slug } = Astro.params;
-return Astro.redirect(`/en/writing/${slug}`, 301);
+return Astro.redirect(`/en/writing/${Astro.params.slug}`, 301);
 ---

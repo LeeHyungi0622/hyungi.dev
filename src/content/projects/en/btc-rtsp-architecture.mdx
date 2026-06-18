@@ -1,0 +1,59 @@
+---
+title: "Busan Transportation Corporation CCTV RTSP Streaming Architecture"
+role: "Senior Backend Engineer"
+year: 2025
+duration: "5 months"
+teamSize: 3
+outcomeSummary: "Designed and implemented a scalable RTSP stream relay infrastructure for Busan Transportation Corporation's CCTV network, enabling reliable live stream distribution across multiple operator consoles"
+overview: "Built the CCTV stream relay and distribution backend for Busan Transportation Corporation's traffic monitoring system. The system ingests RTSP streams from hundreds of IP cameras installed at transit stations and road intersections, and distributes them reliably to operator workstations and a central control center."
+problem: "The existing CCTV system had individual cameras connecting directly to operator workstations via RTSP in a point-to-point architecture. This scaled poorly — adding a new operator console required reconfiguring every camera. Stream reliability was poor, with frequent disconnections and no automatic reconnection logic, causing operators to manually restart streams."
+constraints:
+  - "Hundreds of existing IP cameras with fixed RTSP URLs cannot be replaced"
+  - "Maximum viewer latency: < 3 seconds for live monitoring"
+  - "System must operate 24/7 with 99.9% uptime"
+  - "On-premises deployment within BTC infrastructure"
+  - "5-month implementation timeline"
+approach: "Designed a hub-and-spoke stream relay architecture using an RTSP proxy/relay tier. Each camera stream is ingested once by the relay tier, which then serves multiple simultaneous viewer connections. Implemented automatic reconnection logic with exponential backoff for upstream camera disconnects, and segmented the relay fleet by transit line/geographic zone."
+keyDecisions:
+  - decision: "RTSP relay proxy tier over HLS transcoding"
+    reasoning: "RTSP relay preserves the native stream without transcoding overhead, keeping latency within the 3-second requirement. HLS transcoding would add 5–10 seconds of latency due to segment chunking, which is unsuitable for live monitoring."
+    alternatives:
+      - "HLS/DASH via FFmpeg transcoding"
+      - "WebRTC for browser-based viewing"
+  - decision: "Centralized stream health monitoring with auto-reconnect"
+    reasoning: "IP cameras in transit environments are subject to network hiccups and power cycles. Automatic reconnection eliminates the need for operator intervention on transient failures, maintaining stream continuity."
+    alternatives:
+      - "Manual reconnection via operator console"
+      - "Camera-side reconnection (not controllable from server)"
+  - decision: "Segment relay fleet by transit line/zone"
+    reasoning: "Partitioning the relay tier by geographic zone limits the blast radius of relay failures and allows independent scaling. A relay failure in one zone does not affect streams from other zones."
+    alternatives:
+      - "Single monolithic relay fleet"
+      - "Per-camera relay process"
+techStack:
+  - "GStreamer"
+  - "FFmpeg"
+  - "RTSP (RFC 2326)"
+  - "Java / Spring Boot (control plane)"
+  - "Redis (stream state)"
+  - "PostgreSQL (camera registry)"
+  - "Prometheus / Grafana"
+  - "Docker"
+impact:
+  metrics:
+    - label: "Stream Latency"
+      value: "< 2 seconds end-to-end (target: < 3s)"
+    - label: "Concurrent Streams"
+      value: "200+ simultaneous RTSP connections"
+    - label: "Stream Availability"
+      value: "99.7% uptime across camera fleet"
+  qualitative: "Operators gained a unified, reliable interface for monitoring all cameras without camera-specific configuration. The auto-reconnect mechanism significantly reduced operator workload during periods of network instability. BTC's central control center now runs entirely on the centralized relay backend."
+learnings:
+  - "RTSP reliability depends heavily on network path quality — budget time for testing under real network conditions, not just in the lab"
+  - "Camera firmware bugs are common and unpredictable; defensive stream handling (timeout, reconnect) is essential"
+  - "Monitoring stream health at the relay layer (not just at the camera) gives much earlier warning of issues"
+  - "Segmenting infrastructure by geographic zone aligns well with operational boundaries and simplifies troubleshooting"
+featured: false
+status: completed
+order: 5
+---

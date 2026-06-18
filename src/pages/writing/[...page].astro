@@ -1,3 +1,19 @@
 ---
-return Astro.redirect('/en/writing', 301);
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('writing', ({ data, id }) =>
+    data.draft === false && id.startsWith('en/')
+  );
+  const pageSize = 5;
+  const totalPages = Math.max(1, Math.ceil(articles.length / pageSize));
+
+  const paths: { params: { page: string | undefined } }[] = [{ params: { page: undefined } }];
+  for (let i = 2; i <= totalPages; i++) {
+    paths.push({ params: { page: String(i) } });
+  }
+  return paths;
+}
+
+return Astro.redirect(`/en/writing${Astro.params.page ? `/${Astro.params.page}` : ''}`, 301);
 ---

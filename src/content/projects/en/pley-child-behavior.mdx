@@ -1,0 +1,57 @@
+---
+title: "PLEY — Child Behavior Research App Redesign"
+role: "Lead Engineer"
+year: 2024
+duration: "3 months"
+teamSize: 2
+outcomeSummary: "Redesigned and rearchitected the PLEY mobile app for child behavior pattern research, eliminating data loss in offline environments and enabling multi-device concurrent usage"
+overview: "Led the end-to-end redesign of PLEY, a mobile application used by researchers and therapists to track and analyze child behavior patterns in educational and therapeutic settings. The original app had accumulated significant technical debt that made it unreliable for field research."
+problem: "The legacy app suffered from frequent data loss when devices went offline in research environments such as schools and clinics. Inconsistent sync behavior across iOS and Android caused researchers to distrust the data, and the workflow required manual data exports. These issues were undermining the reliability of research data and causing researchers to fall back to paper-based recording."
+constraints:
+  - "Must preserve the existing behavioral taxonomy and data schema used by ongoing studies"
+  - "Offline-first operation required — research settings often have poor connectivity"
+  - "Cross-platform support: iOS and Android from a single codebase"
+  - "3-month timeline to support an upcoming research cohort"
+  - "Small team: 2 engineers"
+approach: "Adopted an offline-first architecture using a local SQLite database with bi-directional sync to the cloud backend. Rewrote the mobile app in React Native to unify the iOS/Android codebase. Replaced the ad hoc sync logic with a CRDT-based conflict resolution strategy to handle concurrent edits from multiple devices per researcher."
+keyDecisions:
+  - decision: "Offline-first architecture with CRDT conflict resolution"
+    reasoning: "Research sessions occur in low-connectivity environments and data loss is unacceptable. CRDTs allow concurrent edits on multiple devices to merge automatically without data conflicts when connectivity is restored."
+    alternatives:
+      - "Online-only with retry queue"
+      - "Last-write-wins sync"
+  - decision: "React Native over native iOS/Android"
+    reasoning: "A 2-engineer team cannot sustainably maintain two separate native codebases. React Native's shared business logic layer reduces maintenance overhead while preserving native UI performance for data entry flows."
+    alternatives:
+      - "Flutter"
+      - "Separate native iOS and Android apps"
+  - decision: "Preserve existing behavioral taxonomy schema"
+    reasoning: "Ongoing research cohorts were mid-study. Changing the data schema would invalidate comparability with existing data and require researcher retraining. The redesign absorbed the constraints of the existing schema."
+    alternatives:
+      - "Full schema redesign with migration tooling"
+      - "Parallel schema with backward-compat layer"
+techStack:
+  - "React Native"
+  - "TypeScript"
+  - "SQLite (WatermelonDB)"
+  - "Firebase Firestore"
+  - "Node.js"
+  - "PostgreSQL"
+impact:
+  metrics:
+    - label: "Data Loss Rate"
+      value: "0% (down from ~15% in poor connectivity)"
+    - label: "Codebase Consolidation"
+      value: "Single React Native codebase replaced 2 separate native apps"
+    - label: "Sync Reliability"
+      value: "99.9% sync success rate post-launch"
+  qualitative: "Researchers report significantly higher confidence in data integrity. The redesigned workflow reduced session logging time by approximately 30%, allowing researchers to focus on observation. The app became the primary data collection tool across multiple ongoing studies."
+learnings:
+  - "Offline-first is not a feature — it's an architectural constraint that must be designed in from day one"
+  - "CRDT complexity is front-loaded; once the sync layer is solid, application logic becomes simpler"
+  - "Talking directly to end users (researchers) early revealed that the UI workflow was a bigger pain point than the sync issues"
+  - "Preserving existing data schemas is sometimes the right call even when it adds constraints"
+featured: false
+status: completed
+order: 2
+---
