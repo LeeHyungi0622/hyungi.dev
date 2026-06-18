@@ -27,17 +27,14 @@
  */
 
 interface Props {
-  /** Current active page number (1-indexed) */
   currentPage: number;
-  
-  /** Total number of pages available */
   totalPages: number;
-  
-  /** Base URL for pagination links (e.g., "/writing") */
   baseUrl: string;
+  prevText?: string;
+  nextText?: string;
 }
 
-const { currentPage, totalPages, baseUrl } = Astro.props;
+const { currentPage, totalPages, baseUrl, prevText = 'Previous', nextText = 'Next' } = Astro.props;
 
 /**
  * Generates an array of page numbers to display with ellipsis
@@ -95,14 +92,14 @@ function getPageUrl(page: number): string {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
-        <span>Previous</span>
+        <span>{prevText}</span>
       </a>
     ) : (
       <span class="pagination-btn pagination-prev disabled" aria-disabled="true">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
-        <span>Previous</span>
+        <span>{prevText}</span>
       </span>
     )}
 
@@ -124,14 +121,14 @@ function getPageUrl(page: number): string {
 
     {currentPage < totalPages ? (
       <a href={getPageUrl(currentPage + 1)} class="pagination-btn pagination-next" aria-label="Next page">
-        <span>Next</span>
+        <span>{nextText}</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
       </a>
     ) : (
       <span class="pagination-btn pagination-next disabled" aria-disabled="true">
-        <span>Next</span>
+        <span>{nextText}</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>

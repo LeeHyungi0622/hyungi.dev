@@ -72,6 +72,14 @@ export default defineConfig({
    * Set SITE_URL in your .env file (e.g., https://example.com)
    */
   site: SITE_URL || 'https://example.com',
+
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'ko'],
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
   
   /**
    * Environment variables schema (Astro v5+)

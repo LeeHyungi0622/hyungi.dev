@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SEO from '../../../components/SEO.astro';
+import Pagination from '../../../components/Pagination.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import PageStats from '../../../components/PageStats.astro';
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import type { Lang } from '../../../i18n';
+import { useTranslations } from '../../../i18n';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const postsPerPage = 5;
+  const langs: Lang[] = ['en', 'ko'];
+  const paths = [];
+
+  for (const lang of langs) {
+    const allArticles = await getCollection('writing', ({ data, id }) => {
+      return data.draft === false && id.startsWith(`${lang}/`);
+    });
+
+    const sortedArticles = allArticles.sort((a, b) =>
+      b.data.publishDate.getTime() - a.data.publishDate.getTime()
+    );
+
+    const totalPages = Math.max(1, Math.ceil(sortedArticles.length / postsPerPage));
+
+    for (let i = 0; i < totalPages; i++) {
+      const page = i + 1;
+      const start = i * postsPerPage;
+      const end = start + postsPerPage;
+      paths.push({
+        params: { lang, page: page === 1 ? undefined : String(page) },
+        props: {
+          articles: sortedArticles.slice(start, end),
+          currentPage: page,
+          totalPages,
+          totalArticles: sortedArticles.length,
+          lang,
+        },
+      });
+    }
+  }
+
+  return paths;
+};
+
+interface Props {
+  articles: Awaited<ReturnType<typeof getCollection<'writing'>>>;
+  currentPage: number;
+  totalPages: number;
+  totalArticles: number;
+  lang: Lang;
+}
+
+const { articles, currentPage, totalPages, totalArticles, lang } = Astro.props;
+const t = useTranslations(lang);
+const postsPerPage = 5;
+
+const pageTitle = currentPage === 1
+  ? t('writing.heading')
+  : `${t('writing.heading')} - Page ${currentPage}`;
+
+function getSlug(id: string) {
+  return id.replace(`${lang}/`, '');
+}
+---
+
+<BaseLayout lang={lang}>
+  <SEO
+    slot="head"
+    title={`${pageTitle} | ${import.meta.env.SITE_AUTHOR_NAME || 'Portfolio'}`}
+    description={t('writing.intro')}
+    type="website"
+  />
+
+  <main class="page-container">
+    <header class="page-header">
+      <h1 class="page-title">{t('writing.heading')}</h1>
+      <p class="page-intro">{t('writing.intro')}</p>
+      <PageStats text={totalPages > 1
+        ? t('stats.showing')
+            .replace('{from}', String((currentPage - 1) * postsPerPage + 1))
+            .replace('{to}', String(Math.min(currentPage * postsPerPage, totalArticles)))
+            .replace('{total}', String(totalArticles))
+        : t('stats.articles').replace('{total}', String(totalArticles))
+      } />
+    </header>
+
+    {articles.length > 0 ? (
+      <div class="card-list">
+        {articles.map((article) => (
+          <ArticleCard
+            title={article.data.title}
+            slug={getSlug(article.id)}
+            description={article.data.description}
+            publishDate={article.data.publishDate}
+            tags={article.data.tags}
+            lang={lang}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">{t('writing.empty')}</p>
+    )}
+
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      baseUrl={`/${lang}/writing`}
+      prevText={t('pagination.prev')}
+      nextText={t('pagination.next')}
+    />
+  </main>
+</BaseLayout>

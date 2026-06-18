@@ -1,52 +1,26 @@
 ---
-/**
- * Navigation Component
- * 
- * Main site navigation with responsive behavior and theme toggle. Features centered
- * navigation on desktop and horizontal scrolling on mobile. The theme toggle is fixed
- * at the right edge with a gradient fade effect.
- * 
- * Navigation items are configured in src/config.ts and automatically include a "Home"
- * link at the beginning. Active page highlighting is handled both server-side and
- * client-side for View Transitions support.
- * 
- * @component
- * 
- * @example
- * ```astro
- * <Navigation />
- * ```
- */
-import { siteConfig } from '../config';
 import ThemeToggle from './ThemeToggle.astro';
+import { getLangFromUrl, useTranslations } from '../i18n';
+import type { Lang } from '../i18n';
 
 const currentPath = Astro.url.pathname;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const otherLang: Lang = lang === 'en' ? 'ko' : 'en';
+const otherLangUrl = currentPath.replace(`/${lang}/`, `/${otherLang}/`);
 
-/**
- * Navigation items with Home prepended
- * 
- * Combines a hardcoded Home link with navigation items from site config
- * to ensure Home is always first in the navigation.
- */
 const navItems = [
-  { label: 'Home', href: '/' },
-  ...siteConfig.nav,
+  { label: t('nav.home'), href: `/${lang}/` },
+  { label: t('nav.projects'), href: `/${lang}/projects` },
+  { label: t('nav.decisions'), href: `/${lang}/decisions` },
+  { label: t('nav.journey'), href: `/${lang}/journey` },
+  { label: t('nav.writing'), href: `/${lang}/writing` },
+  { label: t('nav.uses'), href: `/${lang}/uses` },
+  { label: t('nav.contact'), href: `/${lang}/contact` },
 ];
 
-/**
- * Determines if a navigation item should be marked as active
- * 
- * Home link is only active on the exact root path. Other links are active
- * if the current path starts with their href, allowing child pages to
- * highlight their parent navigation item.
- * 
- * @param href - The navigation item's URL
- * @returns True if the navigation item should be marked as active
- */
 const isActive = (href: string) => {
-  if (href === '/') {
-    return currentPath === '/';
-  }
+  if (href === `/${lang}/`) return currentPath === `/${lang}/` || currentPath === `/${lang}`;
   return currentPath.startsWith(href);
 };
 ---
@@ -54,50 +28,87 @@ const isActive = (href: string) => {
 <nav class="site-nav" aria-label="Main navigation">
   <div class="nav-scroll">
     <ul class="nav-list">
-      {navItems.map((item) => (
-        <li class="nav-item">
-          <a 
-            href={item.href} 
-            class:list={['nav-link', { 'nav-link--active': isActive(item.href) }]}
-            aria-current={isActive(item.href) ? 'page' : undefined}
-          >
-            {item.label}
-          </a>
-        </li>
-      ))}
+      {navItems.map((item) => {
+        const path = item.href.replace(`/${lang}`, '') || '/';
+        return (
+          <li class="nav-item">
+            <a
+              href={item.href}
+              data-path={path}
+              class:list={['nav-link', { 'nav-link--active': isActive(item.href) }]}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </div>
   <div class="nav-end">
+    <a href={otherLangUrl} class="lang-switch" aria-label="Switch language">
+      {otherLang === 'ko' ? '한국어' : 'EN'}
+    </a>
     <ThemeToggle />
   </div>
 </nav>
 
 <script>
-  function updateActiveNav() {
+  const navLabels: Record<string, Record<string, string>> = {
+    en: {
+      '/': 'Home',
+      '/projects': 'Projects',
+      '/decisions': 'Decisions',
+      '/journey': 'Journey',
+      '/writing': 'Writing',
+      '/uses': 'Uses',
+      '/contact': 'Contact',
+    },
+    ko: {
+      '/': '홈',
+      '/projects': '프로젝트',
+      '/decisions': '의사결정',
+      '/journey': '여정',
+      '/writing': '글',
+      '/uses': '도구',
+      '/contact': '연락처',
+    },
+  };
+
+  function updateNav() {
     const currentPath = window.location.pathname;
-    const navLinks = document.querySelectorAll('.nav-link');
-    
+    const langMatch = currentPath.match(/^\/(en|ko)(\/|$)/);
+    const lang = (langMatch ? langMatch[1] : 'en') as 'en' | 'ko';
+    const otherLang = lang === 'en' ? 'ko' : 'en';
+
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link');
     navLinks.forEach((link) => {
-      const href = link.getAttribute('href');
-      let isActive = false;
-      
-      if (href === '/') {
-        isActive = currentPath === '/';
-      } else if (href) {
-        isActive = currentPath.startsWith(href);
-      }
-      
-      link.classList.toggle('nav-link--active', isActive);
-      if (isActive) {
-        link.setAttribute('aria-current', 'page');
+      const path = link.getAttribute('data-path') || '/';
+      const newHref = `/${lang}${path === '/' ? '/' : path}`;
+      link.href = newHref;
+      const label = navLabels[lang]?.[path];
+      if (label) link.textContent = label;
+
+      let active = false;
+      if (path === '/') {
+        active = currentPath === `/${lang}/` || currentPath === `/${lang}`;
       } else {
-        link.removeAttribute('aria-current');
+        active = currentPath.startsWith(`/${lang}${path}`);
       }
+      link.classList.toggle('nav-link--active', active);
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
     });
+
+    const langSwitch = document.querySelector<HTMLAnchorElement>('.lang-switch');
+    if (langSwitch) {
+      const newLangPath = currentPath.replace(`/${lang}/`, `/${otherLang}/`).replace(`/${lang}`, `/${otherLang}/`);
+      langSwitch.href = newLangPath;
+      langSwitch.textContent = otherLang === 'ko' ? '한국어' : 'EN';
+    }
   }
 
-  // Run on initial load and after each navigation
-  document.addEventListener('astro:page-load', updateActiveNav);
+  document.addEventListener('astro:page-load', updateNav);
 </script>
 
 <style>
@@ -119,9 +130,7 @@ const isActive = (href: string) => {
     -ms-overflow-style: none;
   }
 
-  .nav-scroll::-webkit-scrollbar {
-    display: none;
-  }
+  .nav-scroll::-webkit-scrollbar { display: none; }
 
   .nav-list {
     display: flex;
@@ -150,18 +159,14 @@ const isActive = (href: string) => {
     white-space: nowrap;
   }
 
-  .nav-link:hover {
-    color: var(--color-text);
-  }
-
-  .nav-link--active {
-    color: var(--color-text);
-  }
+  .nav-link:hover { color: var(--color-text); }
+  .nav-link--active { color: var(--color-text); }
 
   .nav-end {
     flex-shrink: 0;
     display: flex;
     align-items: center;
+    gap: 0.75rem;
     padding: 0 0.75rem;
     border-left: 1px solid var(--color-border);
     background: var(--color-bg);
@@ -179,6 +184,25 @@ const isActive = (href: string) => {
     pointer-events: none;
   }
 
+  .lang-switch {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .lang-switch:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+
   @media (max-width: 768px) {
     .nav-list {
       justify-content: flex-start;
@@ -186,12 +210,11 @@ const isActive = (href: string) => {
       padding: 0.5rem 1rem;
     }
 
-    .nav-link {
-      font-size: 0.75rem;
-    }
+    .nav-link { font-size: 0.75rem; }
 
     .nav-end {
       padding: 0 0.5rem;
+      gap: 0.5rem;
     }
 
     .nav-end::before {

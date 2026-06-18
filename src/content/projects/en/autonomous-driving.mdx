@@ -1,8 +1,8 @@
 ---
-title: "웹 리소스 경량화를 통한 운영 비용 최적화"
-role: "Senior Backend Engineer"
+title: "자율주행 데이터 플랫폼 구축"
+role: "Data Engineer, Senior Backend Engineer"
 year: 2025
-outcomeSummary: "홈페이지 전체 리소스 용량을 57.9MB → 15.3MB로 줄여 클라우드 배포 플랜 초과 비용 제거"
+outcomeSummary: "자율주행 데이터 플랫폼 구축"
 overview: "Led the redesign of search infrastructure for an e-commerce platform, replacing a basic database-backed search with a modern, ML-enhanced search system"
 problem: "The existing search was a simple LIKE query against PostgreSQL. It couldn't handle typos, synonyms, or relevance ranking. Search conversion rates were poor, and the system couldn't scale beyond 1000 QPS without significant latency degradation."
 constraints:
@@ -10,7 +10,7 @@ constraints:
   - "p99 latency must be under 200ms"
   - "Budget constraints ruled out managed search services"
   - "Team had no prior Elasticsearch experience"
-approach: "Implemented Elasticsearch as the search backend with a custom relevance tuning pipeline. Built a real-time indexing system using CDC (Change Data Capture) to keep search index synchronized with the product database. Added query understanding layer for typo correction and synonym expansion."
+approach: "통신/보안모듈 담당 기업(`M사`)와 협업
 keyDecisions:
   - decision: "Use Elasticsearch over Algolia"
     reasoning: "Algolia's pricing at our scale was prohibitive ($50k+/year). Elasticsearch gave us more control over relevance tuning and the ability to run complex aggregations for faceted search."

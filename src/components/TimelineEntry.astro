@@ -59,34 +59,25 @@ interface Props {
   
   /** Whether this entry has expandable content in the slot (default: false) */
   hasContent?: boolean;
+
+  /** Language for type labels */
+  lang?: 'en' | 'ko';
 }
 
-const { date, title, type, description, skills, hasContent = false } = Astro.props;
+const { date, title, type, description, skills, hasContent = false, lang = 'en' } = Astro.props;
 
-/**
- * Formats the date to show month and year only
- * 
- * Uses US English locale with long month format.
- * Example output: "January 2024"
- */
-const formattedDate = new Intl.DateTimeFormat('en-US', {
+import { useTranslations } from '../i18n';
+const t = useTranslations(lang);
+
+const formattedDate = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-US', {
   year: 'numeric',
   month: 'long'
 }).format(date);
 
-/**
- * Human-readable labels for timeline entry types
- * 
- * Maps internal type values to display labels shown in the badge.
- * Each type has a distinct color in the UI:
- * - milestone: accent color (achievements, launches)
- * - learning: green (education, skill development)
- * - transition: orange (job changes, career moves)
- */
 const typeLabels = {
-  milestone: 'Milestone',
-  learning: 'Learning',
-  transition: 'Transition'
+  milestone: t('timeline.milestone'),
+  learning: t('timeline.learning'),
+  transition: t('timeline.transition'),
 };
 
 /**

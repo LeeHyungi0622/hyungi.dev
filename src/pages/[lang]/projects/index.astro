@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SEO from '../../../components/SEO.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import PageStats from '../../../components/PageStats.astro';
+import { getCollection } from 'astro:content';
+import type { Lang } from '../../../i18n';
+import { useTranslations } from '../../../i18n';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'en' } }, { params: { lang: 'ko' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects
+  .filter(p => p.id.startsWith(`${lang}/`))
+  .sort((a, b) => {
+    if (a.data.order !== undefined && b.data.order !== undefined) return a.data.order - b.data.order;
+    if (a.data.order !== undefined) return -1;
+    if (b.data.order !== undefined) return 1;
+    return b.data.year - a.data.year;
+  });
+
+const totalProjects = sortedProjects.length;
+const featuredCount = sortedProjects.filter(p => p.data.featured).length;
+
+function getSlug(id: string) {
+  return id.replace(`${lang}/`, '');
+}
+---
+
+<BaseLayout lang={lang}>
+  <SEO
+    slot="head"
+    title={`${t('projects.heading')} | ${import.meta.env.SITE_AUTHOR_NAME || 'Portfolio'}`}
+    description={t('projects.intro')}
+    type="website"
+  />
+
+  <main class="page-container">
+    <header class="page-header">
+      <h1 class="page-title">{t('projects.heading')}</h1>
+      <p class="page-intro">{t('projects.intro')}</p>
+      <PageStats text={`${totalProjects} projects · ${featuredCount} featured`} />
+    </header>
+
+    {sortedProjects.length > 0 ? (
+      <div class="card-list">
+        {sortedProjects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            slug={getSlug(project.id)}
+            outcomeSummary={project.data.outcomeSummary}
+            role={project.data.role}
+            year={project.data.year}
+            techStack={project.data.techStack}
+            featured={project.data.featured}
+            status={project.data.status}
+            lang={lang}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">{t('projects.empty')}</p>
+    )}
+  </main>
+</BaseLayout>

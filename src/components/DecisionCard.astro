@@ -42,9 +42,12 @@ interface Props {
   
   /** Maximum character length for context before truncation (default: 180) */
   maxContextLength?: number;
+
+  /** Language prefix for URL construction (default: 'en') */
+  lang?: string;
 }
 
-const { title, slug, context, date, tags = [], maxContextLength = 180 } = Astro.props;
+const { title, slug, context, date, tags = [], maxContextLength = 180, lang = 'en' } = Astro.props;
 
 /**
  * Formats a date object to show month and year only
@@ -80,7 +83,7 @@ function truncate(text: string, maxLength: number): string {
 const truncatedContext = truncate(context, maxContextLength);
 ---
 
-<BaseCard href={`/decisions/${slug}`} class="decision-card">
+<BaseCard href={`/${lang}/decisions/${slug}`} class="decision-card">
   <Fragment slot="meta">{formatDate(date)}</Fragment>
   <Fragment slot="title">{title}</Fragment>
   <Fragment slot="description">{truncatedContext}</Fragment>

@@ -27,32 +27,18 @@ import BaseCard from './BaseCard.astro';
 import ForwardLink from './ForwardLink.astro';
 
 interface Props {
-  /** Project title (displayed as card heading) */
   title: string;
-  
-  /** URL slug for the project (used to generate /projects/{slug} link) */
   slug: string;
-  
-  /** Brief summary of project outcomes or impact */
   outcomeSummary: string;
-  
-  /** Your role in the project (e.g., "Lead Developer", "Technical Architect") */
   role: string;
-  
-  /** Year the project was completed */
   year: number;
-  
-  /** Optional array of technologies used (displays max 4, shows "+N" for remaining) */
   techStack?: string[];
-  
-  /** Whether to display the featured badge (default: false) */
   featured?: boolean;
-  
-  /** Project status (default: 'completed') */
   status?: 'completed' | 'ongoing' | 'archived';
+  lang?: string;
 }
 
-const { title, slug, outcomeSummary, role, year, techStack = [], featured = false, status = 'completed' } = Astro.props;
+const { title, slug, outcomeSummary, role, year, techStack = [], featured = false, status = 'completed', lang = 'en' } = Astro.props;
 
 // Show max 4 tech tags to keep card clean and consistent
 const displayTech = techStack.slice(0, 4);
@@ -67,7 +53,7 @@ const statusConfig = {
 const statusInfo = statusConfig[status];
 ---
 
-<BaseCard href={`/projects/${slug}`} class="project-card">
+<BaseCard href={`/${lang}/projects/${slug}`} class="project-card">
   <div slot="badge" class="card-badges">
     {featured && (
       <span class="featured-badge">

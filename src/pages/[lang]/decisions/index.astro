@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SEO from '../../../components/SEO.astro';
+import DecisionCard from '../../../components/DecisionCard.astro';
+import PageStats from '../../../components/PageStats.astro';
+import { getCollection } from 'astro:content';
+import type { Lang } from '../../../i18n';
+import { useTranslations } from '../../../i18n';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'en' } }, { params: { lang: 'ko' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+
+const allDecisions = await getCollection('decisions');
+const sortedDecisions = allDecisions
+  .filter(d => d.id.startsWith(`${lang}/`))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const totalDecisions = sortedDecisions.length;
+
+function getSlug(id: string) {
+  return id.replace(`${lang}/`, '');
+}
+---
+
+<BaseLayout lang={lang}>
+  <SEO
+    slot="head"
+    title={`${t('decisions.heading')} | ${import.meta.env.SITE_AUTHOR_NAME || 'Portfolio'}`}
+    description={t('decisions.intro')}
+    type="website"
+  />
+
+  <main class="page-container">
+    <header class="page-header">
+      <h1 class="page-title">{t('decisions.heading')}</h1>
+      <p class="page-intro">{t('decisions.intro')}</p>
+      <PageStats text={`${totalDecisions} decisions documented`} />
+    </header>
+
+    {sortedDecisions.length > 0 ? (
+      <div class="card-list card-list--compact">
+        {sortedDecisions.map((decision) => (
+          <DecisionCard
+            title={decision.data.title}
+            slug={getSlug(decision.id)}
+            context={decision.data.context}
+            date={decision.data.date}
+            tags={decision.data.tags}
+            lang={lang}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">{t('decisions.empty')}</p>
+    )}
+  </main>
+</BaseLayout>

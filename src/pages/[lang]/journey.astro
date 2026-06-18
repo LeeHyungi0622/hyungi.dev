@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+import TimelineEntry from '../../components/TimelineEntry.astro';
+import { getCollection, render } from 'astro:content';
+import type { Lang } from '../../i18n';
+import { useTranslations } from '../../i18n';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'en' } }, { params: { lang: 'ko' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+
+const allEntries = await getCollection('journey');
+const sortedEntries = allEntries
+  .filter(e => e.id.startsWith(`${lang}/`))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const entriesWithContent = await Promise.all(
+  sortedEntries.map(async (entry) => {
+    const { Content } = await render(entry);
+    const hasContent = Boolean(entry.body && entry.body.trim().length > 0);
+    return { entry, Content, hasContent };
+  })
+);
+---
+
+<BaseLayout lang={lang}>
+  <SEO
+    slot="head"
+    title={`${t('journey.heading')} | ${import.meta.env.SITE_AUTHOR_NAME || 'Portfolio'}`}
+    description={t('journey.intro')}
+    type="website"
+  />
+
+  <main class="page-container">
+    <header class="page-header">
+      <h1 class="page-title">{t('journey.heading')}</h1>
+      <p class="page-intro">{t('journey.intro')}</p>
+    </header>
+
+    {entriesWithContent.length > 0 ? (
+      <div class="journey-timeline">
+        {entriesWithContent.map(({ entry, Content, hasContent }) => (
+          <TimelineEntry
+            date={entry.data.date}
+            title={entry.data.title}
+            type={entry.data.type}
+            description={entry.data.description}
+            skills={entry.data.skills}
+            hasContent={hasContent}
+            lang={lang}
+          >
+            {hasContent && <Content />}
+          </TimelineEntry>
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">{t('journey.empty')}</p>
+    )}
+  </main>
+
+  <style>
+    .journey-timeline { margin-top: 2rem; }
+  </style>
+</BaseLayout>

@@ -19,33 +19,28 @@
 import { getCollection } from 'astro:content';
 
 interface Props {
-  /** Array of project slugs to display */
   relatedProjects?: string[];
-  
-  /** Array of decision slugs to display */
   relatedDecisions?: string[];
-  
-  /** Section title (default: "Related") */
   title?: string;
+  lang?: string;
 }
 
-const { 
-  relatedProjects = [], 
+const {
+  relatedProjects = [],
   relatedDecisions = [],
-  title = "Related"
+  title = "Related",
+  lang = 'en',
 } = Astro.props;
 
-// Fetch all collections once
 const allProjects = await getCollection('projects');
 const allDecisions = await getCollection('decisions');
 
-// Filter to get related items
 const projects = relatedProjects
-  .map(slug => allProjects.find(p => p.id === slug))
+  .map(slug => allProjects.find(p => p.id === `${lang}/${slug}`))
   .filter((p): p is NonNullable<typeof p> => p !== undefined);
 
 const decisions = relatedDecisions
-  .map(slug => allDecisions.find(d => d.id === slug))
+  .map(slug => allDecisions.find(d => d.id === `${lang}/${slug}`))
   .filter((d): d is NonNullable<typeof d> => d !== undefined);
 
 const hasRelated = projects.length > 0 || decisions.length > 0;
@@ -75,14 +70,17 @@ function formatDate(date: Date): string {
             Case Studies
           </h3>
           <ul class="related-list">
-            {projects.map((project) => (
-              <li>
-                <a href={`/projects/${project.id}`} class="related-item">
-                  <span class="related-item-meta">{project.data.role} · {project.data.year}</span>
-                  <span class="related-item-title">{project.data.title}</span>
-                </a>
-              </li>
-            ))}
+            {projects.map((project) => {
+              const slug = project.id.replace(`${lang}/`, '');
+              return (
+                <li>
+                  <a href={`/${lang}/projects/${slug}`} class="related-item">
+                    <span class="related-item-meta">{project.data.role} · {project.data.year}</span>
+                    <span class="related-item-title">{project.data.title}</span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
@@ -98,14 +96,17 @@ function formatDate(date: Date): string {
             Decisions
           </h3>
           <ul class="related-list">
-            {decisions.map((decision) => (
-              <li>
-                <a href={`/decisions/${decision.id}`} class="related-item">
-                  <span class="related-item-meta">{formatDate(decision.data.date)}</span>
-                  <span class="related-item-title">{decision.data.title}</span>
-                </a>
-              </li>
-            ))}
+            {decisions.map((decision) => {
+              const slug = decision.id.replace(`${lang}/`, '');
+              return (
+                <li>
+                  <a href={`/${lang}/decisions/${slug}`} class="related-item">
+                    <span class="related-item-meta">{formatDate(decision.data.date)}</span>
+                    <span class="related-item-title">{decision.data.title}</span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
