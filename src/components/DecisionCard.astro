@@ -43,11 +43,11 @@ interface Props {
   /** Maximum character length for context before truncation (default: 180) */
   maxContextLength?: number;
 
-  /** Language prefix for URL construction (default: 'en') */
+  /** Language prefix for URL construction (default: 'ko') */
   lang?: string;
 }
 
-const { title, slug, context, date, tags = [], maxContextLength = 180, lang = 'en' } = Astro.props;
+const { title, slug, context, date, tags = [], maxContextLength = 180, lang = 'ko' } = Astro.props;
 
 /**
  * Formats a date object to show month and year only

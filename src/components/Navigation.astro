@@ -78,7 +78,7 @@ const isActive = (href: string) => {
   function updateNav() {
     const currentPath = window.location.pathname;
     const langMatch = currentPath.match(/^\/(en|ko)(\/|$)/);
-    const lang = (langMatch ? langMatch[1] : 'en') as 'en' | 'ko';
+    const lang = (langMatch ? langMatch[1] : 'ko') as 'en' | 'ko';
     const otherLang = lang === 'en' ? 'ko' : 'en';
 
     const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link');

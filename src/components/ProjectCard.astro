@@ -38,7 +38,7 @@ interface Props {
   lang?: string;
 }
 
-const { title, slug, outcomeSummary, role, year, techStack = [], featured = false, status = 'completed', lang = 'en' } = Astro.props;
+const { title, slug, outcomeSummary, role, year, techStack = [], featured = false, status = 'completed', lang = 'ko' } = Astro.props;
 
 // Show max 4 tech tags to keep card clean and consistent
 const displayTech = techStack.slice(0, 4);

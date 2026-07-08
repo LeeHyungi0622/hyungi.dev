@@ -64,7 +64,7 @@ interface Props {
   lang?: 'en' | 'ko';
 }
 
-const { date, title, type, description, skills, hasContent = false, lang = 'en' } = Astro.props;
+const { date, title, type, description, skills, hasContent = false, lang = 'ko' } = Astro.props;
 
 import { useTranslations } from '../i18n';
 const t = useTranslations(lang);

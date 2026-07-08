@@ -74,7 +74,7 @@ export default defineConfig({
   site: SITE_URL || 'https://example.com',
 
   i18n: {
-    defaultLocale: 'en',
+    defaultLocale: 'ko',
     locales: ['en', 'ko'],
     routing: {
       prefixDefaultLocale: true,
@@ -96,7 +96,7 @@ export default defineConfig({
     schema: {
       // Site configuration
       SITE_URL: envField.string({ context: 'client', access: 'public', default: 'https://example.com' }),
-      SITE_LANGUAGE: envField.string({ context: 'client', access: 'public', default: 'en' }),
+      SITE_LANGUAGE: envField.string({ context: 'client', access: 'public', default: 'ko' }),
       SITE_TITLE: envField.string({ context: 'client', access: 'public', default: 'Professional Portfolio' }),
       SITE_DESCRIPTION: envField.string({ context: 'client', access: 'public', default: 'Engineering leader specializing in system architecture, technical decision-making, and delivering measurable business impact.' }),
       

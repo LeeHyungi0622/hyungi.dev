@@ -1,6 +1,6 @@
 export const languages = { en: 'English', ko: '한국어' } as const;
 export type Lang = keyof typeof languages;
-export const defaultLang: Lang = 'en';
+export const defaultLang: Lang = 'ko';
 
 export const ui = {
   en: {
