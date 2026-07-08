@@ -1,0 +1,10 @@
+{
+  // Names the existing Cloudflare Worker so `wrangler deploy` is authorized to
+  // update it instead of stopping. Static Astro build (output: 'static') is
+  // served as an assets-only Worker from the ./dist directory.
+  "name": "hyungi-dev",
+  "compatibility_date": "2026-07-07",
+  "assets": {
+    "directory": "./dist"
+  }
+}
