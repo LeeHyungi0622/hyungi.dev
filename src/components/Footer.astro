@@ -1,16 +1,16 @@
 ---
 /**
  * Footer Component
- * 
- * Site-wide footer displaying copyright information and social media links.
- * Automatically filters and displays only configured social links from site config.
- * Responsive layout that stacks vertically on mobile devices.
- * 
+ *
+ * Site-wide footer displaying copyright information, quick contact CTAs
+ * (email, resume download), and social media links. Responsive layout
+ * that stacks vertically on mobile devices.
+ *
  * Social links are pulled from siteConfig.social and only displayed if they have
  * a URL value configured. Links open in new tabs with proper security attributes.
- * 
+ *
  * @component
- * 
+ *
  * @example
  * ```astro
  * <Footer />
@@ -25,10 +25,10 @@ const currentYear = new Date().getFullYear();
 
 /**
  * Filters and formats social links from site configuration
- * 
+ *
  * Only includes platforms that have a URL configured (non-empty values).
  * Capitalizes platform names for display (e.g., "github" becomes "Github").
- * 
+ *
  * @returns Array of social link objects with platform name and URL
  */
 const socialLinks = Object.entries(siteConfig.social)
@@ -42,7 +42,14 @@ const socialLinks = Object.entries(siteConfig.social)
 <footer class="site-footer">
   <div class="footer-container">
     <span class="copyright">© {currentYear} {siteConfig.author.name}</span>
-    
+
+    <div class="footer-cta">
+      <a href={`mailto:${siteConfig.author.email}`} class="cta-link">이메일 보내기</a>
+      {siteConfig.resumeUrl && (
+        <a href={siteConfig.resumeUrl} class="cta-link cta-link--primary" download>이력서 다운로드</a>
+      )}
+    </div>
+
     {socialLinks.length > 0 && (
       <div class="footer-social">
         {socialLinks.map((link, index) => (
@@ -60,7 +67,7 @@ const socialLinks = Object.entries(siteConfig.social)
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--color-border);
+    border-top: var(--border-width-thick) solid var(--color-border);
     padding: 2rem 1.5rem;
     margin-top: auto;
   }
@@ -69,6 +76,7 @@ const socialLinks = Object.entries(siteConfig.social)
     max-width: 1100px;
     margin: 0 auto;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
@@ -77,6 +85,37 @@ const socialLinks = Object.entries(siteConfig.social)
   .copyright {
     font-size: 0.8125rem;
     color: var(--color-text-muted);
+  }
+
+  .footer-cta {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+  }
+
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-text);
+    text-decoration: none;
+    padding: 0.4375rem 0.875rem;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-bg);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .cta-link:hover {
+    color: var(--color-text);
+    box-shadow: var(--shadow-hard-sm);
+    transform: translate(-1.5px, -1.5px);
+  }
+
+  .cta-link--primary {
+    background: var(--color-yellow);
   }
 
   .footer-social {
@@ -102,10 +141,10 @@ const socialLinks = Object.entries(siteConfig.social)
     user-select: none;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .footer-container {
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 1rem;
       text-align: center;
     }
   }

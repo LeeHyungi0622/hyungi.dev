@@ -1,0 +1,20 @@
+---
+title: "V2X 메시지 직렬화에 Protocol Buffers 채택"
+date: 2025-04-10
+context: "경찰청 자율주행 순찰차 프로토타입에서 차량-인프라 간 V2X 메시지는 종단간 100ms 이내 지연시간 요건을 충족해야 했고, 여러 벤더가 함께 만드는 인터페이스의 호환성도 보장해야 했습니다."
+decision: "바이너리 직렬화 방식인 Protocol Buffers를 채택해 메시지 크기를 JSON 대비 약 60% 줄이고, 스키마 레지스트리로 인터페이스 계약을 강제했습니다."
+alternatives:
+  - option: "JSON over HTTP/REST"
+    cons:
+      - "메시지 크기가 커 100ms 지연시간 예산 내 처리가 어려움"
+  - option: "커스텀 바이너리 프로토콜"
+    cons:
+      - "스키마 레지스트리 등 표준 도구 생태계가 없어 팀 간 계약 관리 부담이 큼"
+reasoning: "스키마 레지스트리를 통해 차량 ECU와 인프라 백엔드 간 인터페이스 호환성을 강제할 수 있어, 지연 요건과 교차 벤더 협업 안정성을 동시에 확보했습니다."
+tags:
+  - "v2x"
+  - "protocol"
+  - "performance"
+relatedProjects:
+  - "v2x-patrol-car"
+---

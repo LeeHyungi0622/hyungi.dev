@@ -1,0 +1,16 @@
+---
+title: "자체 Kafka 클러스터 직접 구축 (AWS MSK 대신)"
+date: 2022-10-18
+context: "이전에 구축했던 IoT 센서 데이터 파이프라인에서, Kinesis Data Stream의 Producer·Consumer가 늘어날수록 서비스 사용 비용이 함께 증가하는 문제를 겪었습니다."
+decision: "로컬 환경에 Docker로 3-broker Kafka 클러스터(Zookeeper 3노드, ISR 복제)를 직접 구축해 운영하기로 했습니다."
+alternatives:
+  - option: "AWS MSK (Fully Managed Apache Kafka)"
+    cons:
+      - "관리 부담은 줄지만 Kafka 내부 동작 방식을 직접 이해할 기회가 줄어듦"
+reasoning: "MSK도 결국 오픈소스 Kafka 기반 서비스라 직접 운영하며 내부 동작 방식을 이해하는 게 필요하다고 판단했고, 향후 서비스 확장 시 온프레미스 환경에서 비용을 절감하며 Kafka를 직접 운영할 가능성도 함께 검증하고자 했습니다."
+tags:
+  - "kafka"
+  - "streaming"
+relatedProjects:
+  - "kafka-elk-grafana"
+---

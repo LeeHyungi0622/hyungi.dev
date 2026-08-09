@@ -83,7 +83,7 @@ export const siteConfig = {
     name: getEnv('SITE_AUTHOR_NAME', 'Lee Hyungi'),
     
     /** Professional title or role */
-    title: getEnv('SITE_AUTHOR_TITLE', 'Infrastructure & Backend Engineer'),
+    title: getEnv('SITE_AUTHOR_TITLE', 'Data Platform Engineer'),
     
     /** Short biography or professional summary */
     bio: getEnv('SITE_AUTHOR_BIO', 'Engineering leader focused on solving complex technical challenges through thoughtful architecture and pragmatic trade-off analysis.'),
@@ -94,7 +94,14 @@ export const siteConfig = {
     /** Location (optional, empty string to hide) */
     location: getEnv('SITE_AUTHOR_LOCATION', 'Seoul, South Korea'),
   },
-  
+
+  /**
+   * Resume download URL
+   *
+   * Set to empty string to hide the resume download link in the footer.
+   */
+  resumeUrl: getEnv('SITE_RESUME_URL', ''),
+
   /**
    * Social media links
    * 

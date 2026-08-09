@@ -1,0 +1,16 @@
+---
+title: "Kafka Consumer Lag 모니터링 도구로 Burrow + Telegraf + Grafana 채택"
+date: 2022-11-22
+context: "유입 데이터에 비해 Consumer 소비가 느려지는 Lag은 장애로 이어질 수 있어, 이를 실시간으로 감지·시각화할 체계가 필요했습니다."
+decision: "Burrow로 Kafka Consumer의 offset과 broker HEAD offset을 비교해 Lag 상태를 계산하고, Telegraf로 Elasticsearch에 주기적으로 적재해 Grafana로 시계열 대시보드를 구성했습니다."
+alternatives:
+  - option: "Kafka 자체 JMX 메트릭만으로 모니터링"
+    cons:
+      - "Consumer 관점의 Lag 추이를 직관적으로 파악하기 어려움"
+reasoning: "데이터 파이프라인은 만드는 것과 안정적으로 운영하는 것이 다른 문제라고 판단해, 운영 관점의 실시간 모니터링 체계를 별도로 구축했습니다."
+tags:
+  - "monitoring"
+  - "kafka"
+relatedProjects:
+  - "kafka-elk-grafana"
+---

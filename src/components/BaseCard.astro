@@ -57,16 +57,17 @@ const { href, class: className } = Astro.props;
     display: block;
     position: relative;
     padding: 1.5rem 1.75rem;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
+    background: var(--color-bg);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-hard-sm);
     text-decoration: none;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .base-card:hover {
-    border-color: var(--color-text-muted);
-    background: var(--color-bg-elevated);
+    transform: translate(3px, 3px);
+    box-shadow: none;
   }
 
   .card-meta {
@@ -82,7 +83,7 @@ const { href, class: className } = Astro.props;
   .card-title {
     display: block;
     font-size: 1.125rem;
-    font-weight: 600;
+    font-weight: 800;
     color: var(--color-text);
     margin-bottom: 0.625rem;
     line-height: 1.4;

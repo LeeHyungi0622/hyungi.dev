@@ -7,7 +7,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-black);
   line-height: var(--line-height-tight);
   color: var(--color-text);
   margin-top: 0;
@@ -16,7 +16,7 @@ h6 {
 
 h1 {
   font-size: var(--font-size-5xl);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin-bottom: var(--space-lg);
 }
 

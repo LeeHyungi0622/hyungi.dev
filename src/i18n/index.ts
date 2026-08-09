@@ -1,2 +1,2 @@
-export { getLangFromUrl, useTranslations, getLocalizedPath, defaultLang, languages } from './translations';
-export type { Lang, TranslationKey } from './translations';
+export { t } from './translations';
+export type { TranslationKey } from './translations';

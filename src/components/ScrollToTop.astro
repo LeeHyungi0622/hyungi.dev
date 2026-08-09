@@ -42,15 +42,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
+    background: var(--color-yellow);
+    border: var(--border-width) solid var(--color-border);
     border-radius: var(--border-radius-sm);
-    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-hard-sm);
+    color: var(--color-text);
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px);
-    transition: 
+    transition:
       opacity 0.2s ease,
       visibility 0.2s ease,
       transform 0.2s ease,
@@ -61,9 +62,8 @@
   }
 
   .scroll-to-top:hover {
-    background: var(--color-bg-elevated);
-    color: var(--color-text);
-    border-color: var(--color-text-muted);
+    transform: translate(2px, 2px);
+    box-shadow: none;
   }
 
   .scroll-to-top:focus-visible {
@@ -75,6 +75,11 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+  }
+
+  .scroll-to-top.is-visible:hover {
+    transform: translate(2px, 2px);
+    box-shadow: none;
   }
 
   @media (max-width: 640px) {

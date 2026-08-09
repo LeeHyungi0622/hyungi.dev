@@ -1,0 +1,19 @@
+---
+title: "GitLab CI/CD 브랜치 기반 자동 배포 체계 구축"
+date: 2024-09-05
+context: "시공관리 종합 솔루션은 개발 중인 기능과 영업·현업이 확인하는 배포 버전이 같은 서버에서 섞이면 사고 위험이 커지는 구조였습니다."
+decision: "GitLab Runner를 컨테이너 기반으로 구성하고, master/develop 브랜치별로 각각 운영(prod/stage)·개발(dev) 서버로 자동 배포되는 파이프라인을 구축했습니다."
+alternatives:
+  - option: "수동 배포(스크립트 실행) 유지"
+    cons:
+      - "반복 작업 부담과 배포 대상 서버를 잘못 지정할 휴먼 에러 리스크가 계속 남음"
+  - option: "Jenkins 기반 파이프라인 도입"
+    cons:
+      - "GitLab과 별도로 CI 도구를 하나 더 운영해야 하는 부담이 추가됨"
+reasoning: "브랜치 전략과 배포 대상 서버를 1:1로 매핑해 사고 위험을 낮췄고, Runner를 컨테이너 기반으로 올려 배포 환경 자체도 서버 재구성 없이 이식 가능하도록 했습니다."
+tags:
+  - "cicd"
+  - "devops"
+relatedProjects:
+  - "infra-cicd-airflow"
+---

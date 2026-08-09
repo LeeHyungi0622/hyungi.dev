@@ -1,0 +1,60 @@
+---
+title: "[개인 프로젝트] UFO 관측 데이터셋 분석 파이프라인 구축"
+role: "Personal Data Engineering Project"
+year: 2022
+teamSize: 1
+outcomeSummary: "Kaggle의 UFO Sighting 데이터셋을 Terraform으로 인프라를 코드화해 API Gateway → Kinesis → S3 Data Lake에 적재하고, Amazon EMR(Zeppelin, PySpark/Spark SQL)로 정제해 DW·DM 계층을 구성한 뒤 QuickSight로 시각화까지 완성한 Kappa Architecture 기반 개인 프로젝트입니다."
+overview: "Kaggle에서 제공하는 UFO Sighting 데이터셋(약 8만 건)을 Kappa Architecture로 구성한 파이프라인으로 처리했습니다. 데이터를 S3에 저장해 Data Lake를 구축하고, Amazon EMR에서 Zeppelin을 통해 PySpark와 Spark SQL로 데이터를 정제해 DW(Silver)·DM(Gold) 레벨의 데이터를 생성했습니다. 최종적으로 S3에 적재된 데이터는 Amazon QuickSight로 분석·시각화했습니다. 인프라 전체는 Terraform으로 코드화해 관리했습니다."
+problem: "배치 처리와 스트림 처리를 각각 다른 파이프라인으로 이원화하지 않고, 하나의 구조로 통합해 실시간성과 재처리 유연성을 동시에 확보하고 싶었습니다. 또한 Raw 데이터부터 정제된 분석용 데이터까지 계층(DW/DM)을 어떻게 나눌지, 그리고 향후 데이터 양이 늘어나거나 복수 작업자가 동시에 접근하는 상황에서도 확장 가능한 구조를 어떻게 설계할지가 과제였습니다."
+constraints:
+  - "인프라를 매번 수동으로 만들지 않고 코드로 재현 가능하게 관리해야 함"
+  - "스트림 처리 엔진의 데이터 신뢰성(유실·중복 방지)을 확보해야 함"
+  - "향후 복수 작업자가 동시에 Storage에 접근·처리할 수 있는 확장성을 고려해야 함"
+  - "Raw → DW → DM으로 이어지는 데이터 정제 계층의 기준을 설계해야 함"
+approach: "(1) 인프라 코드화(IaC). API Gateway, Kinesis Data Stream, Kinesis Data Firehose, S3 버킷까지 전체 인프라를 Terraform으로 선언하고 `terraform apply`로 프로비저닝했습니다. (2) 데이터 수집. UFO Sighting CSV 데이터셋을 Python 스크립트로 객체 리스트로 변환한 뒤, API Gateway 엔드포인트로 약 8만 3천 건을 JSON 형태로 전송했습니다. API Gateway로 들어온 데이터는 Kinesis Data Stream을 거쳐 Kinesis Data Firehose를 통해 S3에 Raw 데이터로 적재되어 Data Lake를 구성했습니다. (3) 데이터 정제·계층화. 적재된 Raw 데이터는 Amazon EMR에서 Zeppelin(Spark Interpreter)을 통해 PySpark로 정제하고, 최종적으로 DW(Silver)와 DM(Gold) 레벨의 데이터로 나누어 S3에 재적재했습니다. (4) Storage·Compute 노드 분리. HDFS 대신 S3를 데이터 노드로, EMR을 컴퓨팅 노드로 분리해 각각 독립적인 객체로 운영되도록 설계했습니다. (5) 시각화. DM 레벨 데이터를 Amazon QuickSight로 가져와 지역별·시기별·UFO 형태별 관측 패턴을 대시보드로 시각화했습니다."
+keyDecisions:
+  - decision: "파이프라인 아키텍처로 Kappa Architecture 채택"
+    reasoning: "컴퓨팅 리소스와 스트림 처리 엔진 기술이 발달하면서 배치와 스트림 처리를 모두 실시간 스트림으로 처리하는 것이 가능해졌고, 스트림 처리 엔진이 at-most-once가 아닌 exactly-once까지 지원하면서 데이터 유실·중복 가능성 없이 신뢰도 있게 처리할 수 있게 됐습니다. 이런 이유로 배치·스트림을 이원화하는 대신 Kappa Architecture로 파이프라인을 단순화했습니다."
+    alternatives:
+      - "Lambda Architecture (배치 레이어와 스트림 레이어를 이원화하는 구조)"
+  - decision: "Storage(S3)와 Compute(EMR) 노드 분리 — HDFS 대신 S3 채택"
+    reasoning: "데이터 노드(S3)와 컴퓨팅 노드(EMR)를 서로 분리해 독립적인 객체로 운영하면 더 나은 데이터 파이프라인 아키텍처를 구성할 수 있다고 판단했습니다. 지금은 작은 규모의 개인 프로젝트지만, 향후 복수 작업자가 Storage의 데이터를 Spark로 동시에 접근·처리하는 상황이 생길 수 있어, 노드를 분리해 작업자 간 종속성을 줄이는 방향을 선택했습니다."
+    alternatives:
+      - "EMR 내 HDFS를 스토리지로 사용하는 전통적 구조"
+  - decision: "인프라를 Terraform으로 코드화(IaC)"
+    reasoning: "API Gateway, Kinesis, S3 등 여러 AWS 리소스를 매번 콘솔에서 수동으로 생성하는 대신, Terraform으로 선언해 재현 가능하고 버전 관리 가능한 인프라로 구성했습니다."
+    alternatives:
+      - "AWS 콘솔에서 리소스 수동 생성"
+  - decision: "스트리밍 서비스로 Kinesis Data Stream 선택"
+    reasoning: "오픈소스 Kafka와 유사한 스트리밍 기능을 제공하면서도 완전관리형 서비스라 운영 부담이 적고, shard 수를 유연하게 늘리고 줄일 수 있다는 장점이 있었습니다. 다만 Partition·Replica 수 같은 세밀한 값을 커스텀하려면 Kafka를 직접 구축하는 편이 낫다는 점도 함께 학습했습니다."
+    alternatives:
+      - "자체 서버에 Kafka 직접 구축"
+techStack:
+  - "Terraform (IaC)"
+  - "AWS API Gateway"
+  - "Amazon Kinesis Data Streams"
+  - "Kinesis Data Firehose"
+  - "Amazon S3 (Data Lake)"
+  - "Amazon EMR"
+  - "Apache Zeppelin"
+  - "PySpark"
+  - "Spark SQL"
+  - "Amazon QuickSight"
+  - "Python"
+impact:
+  metrics:
+    - label: "데이터 규모"
+      value: "UFO 관측 데이터 약 8만 3천 건을 Kappa Architecture 파이프라인으로 처리"
+    - label: "인프라 자동화"
+      value: "Terraform IaC로 API Gateway부터 S3까지 인프라 전체를 코드화"
+    - label: "분석 파이프라인 구축"
+      value: "EMR + PySpark로 Raw → DW → DM 계층 정제, QuickSight로 지역·시기·형태별 시각화"
+  qualitative: "Kappa Architecture 기반으로 스트림 처리 파이프라인을 설계하고, 인프라를 Terraform으로 코드화해 재현 가능하게 관리하며, Storage와 Compute를 분리하는 확장 가능한 구조까지 고려한 프로젝트였습니다. 관리형 서비스와 자체 구축 방식의 트레이드오프를 직접 비교하며 학습했고, 이 경험은 이후 데이터 파이프라인 설계에서 지속적인 판단 기준이 되었습니다."
+learnings:
+  - "AWS 상용 서비스뿐 아니라 그 기반이 되는 오픈소스 프로젝트(Kafka 등)가 내부적으로 어떻게 동작하는지 더 찾아보며 이해를 넓혔습니다."
+  - "실제 기업에서는 상용 서비스보다 자체 서버를 구축·운영하는 경우가 많다는 점을 고려해, 관리형 서비스와 자체 구축 방식의 운영 부담·커스터마이징 자유도 트레이드오프를 비교해봤습니다."
+  - "DW와 DM의 구분 경계가 애매했던 부분을 인지했고, 이후 프로젝트에서는 Kinesis에서 받은 데이터를 Flink로 바로 던져 Elasticsearch에서 시각화하는 등 다른 파이프라인 구조로 개선을 시도해볼 계획을 세웠습니다."
+featured: false
+status: completed
+order: 7
+---

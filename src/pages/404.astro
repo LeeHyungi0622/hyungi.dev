@@ -1,25 +1,25 @@
 ---
 /**
  * 404 Not Found Page
- * 
+ *
  * Custom error page displayed when a requested page doesn't exist.
  * Features a minimal, centered layout with an icon, message, and
  * navigation back to the homepage.
- * 
+ *
  * Design:
  * - No header, navigation, or footer for focused experience
  * - Centered content with SVG icon
  * - Clear messaging about the error
  * - Single CTA button to return home
- * 
+ *
  * Route: /404 (automatically served for non-existent pages)
- * 
+ *
  * @page
  */
 
 import { siteConfig } from '../config';
 
-const pageTitle = '404 - Page Not Found';
+const pageTitle = '404 - 페이지를 찾을 수 없습니다';
 ---
 
 <!DOCTYPE html>
@@ -29,31 +29,26 @@ const pageTitle = '404 - Page Not Found';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="robots" content="noindex, nofollow" />
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    
+
+    <!-- Pretendard (Korean-optimized bold display font) -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" />
+
     <!-- Inline critical styles -->
     <style>
       :root {
-        /* Colors - Dark theme */
-        --color-bg: #0a0a0a;
-        --color-text: #e5e5e5;
-        --color-text-secondary: #a3a3a3;
-        --color-text-muted: #737373;
-        --color-accent: #3b82f6;
-        --color-accent-hover: #2563eb;
-      }
-
-      [data-theme="light"] {
         --color-bg: #ffffff;
-        --color-text: #171717;
-        --color-text-secondary: #525252;
-        --color-text-muted: #737373;
-        --color-accent: #2563eb;
-        --color-accent-hover: #1d4ed8;
+        --color-text: #111111;
+        --color-text-secondary: #3f3f46;
+        --color-text-muted: #71717a;
+        --color-border: #111111;
+        --color-accent: #ff3b3b;
+        --color-yellow: #ffde59;
       }
 
       * {
@@ -63,7 +58,7 @@ const pageTitle = '404 - Page Not Found';
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         background: var(--color-bg);
         color: var(--color-text);
         line-height: 1.5;
@@ -80,17 +75,28 @@ const pageTitle = '404 - Page Not Found';
         text-align: center;
       }
 
-      .icon {
+      .icon-wrap {
         width: 80px;
         height: 80px;
         margin: 0 auto 2rem;
-        color: var(--color-text-muted);
-        opacity: 0.6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-yellow);
+        border: 3px solid var(--color-border);
+        border-radius: 50%;
+        box-shadow: 5px 5px 0 var(--color-border);
+      }
+
+      .icon {
+        width: 40px;
+        height: 40px;
+        color: var(--color-text);
       }
 
       .error-code {
         font-size: 1rem;
-        font-weight: 600;
+        font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--color-text-muted);
@@ -99,7 +105,7 @@ const pageTitle = '404 - Page Not Found';
 
       h1 {
         font-size: 2rem;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: -0.02em;
         margin-bottom: 1rem;
         color: var(--color-text);
@@ -115,24 +121,32 @@ const pageTitle = '404 - Page Not Found';
       .home-button {
         display: inline-block;
         padding: 0.875rem 2rem;
-        background: var(--color-text);
-        color: var(--color-bg);
-        font-weight: 600;
+        background: var(--color-bg);
+        color: var(--color-text);
+        font-weight: 800;
         font-size: 1rem;
         text-decoration: none;
-        border-radius: 6px;
-        transition: opacity 0.2s ease;
+        border: 2px solid var(--color-border);
+        border-radius: 8px;
+        box-shadow: 4px 4px 0 var(--color-border);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
       }
 
       .home-button:hover {
-        opacity: 0.85;
+        transform: translate(4px, 4px);
+        box-shadow: none;
       }
 
       @media (max-width: 640px) {
-        .icon {
+        .icon-wrap {
           width: 64px;
           height: 64px;
           margin-bottom: 1.5rem;
+        }
+
+        .icon {
+          width: 32px;
+          height: 32px;
         }
 
         .error-code {
@@ -154,34 +168,26 @@ const pageTitle = '404 - Page Not Found';
         }
       }
     </style>
-
-    <!-- Theme initialization script -->
-    <script is:inline>
-      (function() {
-        const stored = localStorage.getItem('theme');
-        const theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        document.documentElement.setAttribute('data-theme', theme);
-      })();
-    </script>
   </head>
   <body>
     <div class="container">
-      <!-- 404 Icon -->
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-      </svg>
+      <div class="icon-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
 
       <div class="error-code">404 Error</div>
-      
-      <h1>Page Not Found</h1>
-      
+
+      <h1>페이지를 찾을 수 없습니다</h1>
+
       <p class="description">
-        The page you're looking for doesn't exist or has been moved. Let's get you back on track.
+        찾으시는 페이지가 존재하지 않거나 이동되었습니다. 홈으로 돌아가 다시 찾아보세요.
       </p>
 
-      <a href="/" class="home-button">Back to Home</a>
+      <a href="/" class="home-button">홈으로 돌아가기</a>
     </div>
   </body>
 </html>

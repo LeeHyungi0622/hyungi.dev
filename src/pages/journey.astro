@@ -1,3 +1,58 @@
 ---
-return Astro.redirect('/ko/journey', 301);
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SEO from '../components/SEO.astro';
+import TimelineEntry from '../components/TimelineEntry.astro';
+import { getCollection, render } from 'astro:content';
+import { t } from '../i18n';
+
+const allEntries = await getCollection('journey');
+const sortedEntries = allEntries
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const entriesWithContent = await Promise.all(
+  sortedEntries.map(async (entry) => {
+    const { Content } = await render(entry);
+    const hasContent = Boolean(entry.body && entry.body.trim().length > 0);
+    return { entry, Content, hasContent };
+  })
+);
 ---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={`${t('journey.heading')} | ${import.meta.env.SITE_AUTHOR_NAME || 'Portfolio'}`}
+    description={t('journey.intro')}
+    type="website"
+  />
+
+  <main class="page-container">
+    <header class="page-header">
+      <h1 class="page-title">{t('journey.heading')}</h1>
+      <p class="page-intro">{t('journey.intro')}</p>
+    </header>
+
+    {entriesWithContent.length > 0 ? (
+      <div class="journey-timeline">
+        {entriesWithContent.map(({ entry, Content, hasContent }) => (
+          <TimelineEntry
+            date={entry.data.date}
+            title={entry.data.title}
+            type={entry.data.type}
+            description={entry.data.description}
+            skills={entry.data.skills}
+            hasContent={hasContent}
+          >
+            {hasContent && <Content />}
+          </TimelineEntry>
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">{t('journey.empty')}</p>
+    )}
+  </main>
+
+  <style>
+    .journey-timeline { margin-top: 2rem; }
+  </style>
+</BaseLayout>

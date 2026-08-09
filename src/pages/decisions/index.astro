@@ -1,3 +1,47 @@
 ---
-return Astro.redirect('/ko/decisions', 301);
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+import DecisionCard from '../../components/DecisionCard.astro';
+import PageStats from '../../components/PageStats.astro';
+import { getCollection } from 'astro:content';
+import { t } from '../../i18n';
+
+const allDecisions = await getCollection('decisions');
+const sortedDecisions = allDecisions
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const totalDecisions = sortedDecisions.length;
 ---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={`${t('decisions.heading')} | ${import.meta.env.SITE_AUTHOR_NAME || 'Portfolio'}`}
+    description={t('decisions.intro')}
+    type="website"
+  />
+
+  <main class="page-container">
+    <header class="page-header">
+      <h1 class="page-title">{t('decisions.heading')}</h1>
+      <p class="page-intro">{t('decisions.intro')}</p>
+      <PageStats text={`${totalDecisions} decisions documented`} />
+    </header>
+
+    {sortedDecisions.length > 0 ? (
+      <div class="card-list card-list--compact">
+        {sortedDecisions.map((decision) => (
+          <DecisionCard
+            title={decision.data.title}
+            slug={decision.id}
+            context={decision.data.context}
+            date={decision.data.date}
+            tags={decision.data.tags}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">{t('decisions.empty')}</p>
+    )}
+  </main>
+</BaseLayout>

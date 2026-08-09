@@ -59,17 +59,13 @@ interface Props {
   
   /** Whether this entry has expandable content in the slot (default: false) */
   hasContent?: boolean;
-
-  /** Language for type labels */
-  lang?: 'en' | 'ko';
 }
 
-const { date, title, type, description, skills, hasContent = false, lang = 'ko' } = Astro.props;
+const { date, title, type, description, skills, hasContent = false } = Astro.props;
 
-import { useTranslations } from '../i18n';
-const t = useTranslations(lang);
+import { t } from '../i18n';
 
-const formattedDate = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-US', {
+const formattedDate = new Intl.DateTimeFormat('ko-KR', {
   year: 'numeric',
   month: 'long'
 }).format(date);
@@ -238,7 +234,7 @@ const entryId = `journey-${date.getTime()}`;
 
   .timeline-title {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 800;
     margin-bottom: 0.5rem;
     color: var(--color-text);
     line-height: 1.25;

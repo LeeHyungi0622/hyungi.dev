@@ -73,14 +73,6 @@ export default defineConfig({
    */
   site: SITE_URL || 'https://example.com',
 
-  i18n: {
-    defaultLocale: 'ko',
-    locales: ['en', 'ko'],
-    routing: {
-      prefixDefaultLocale: true,
-    },
-  },
-  
   /**
    * Environment variables schema (Astro v5+)
    * 
@@ -106,7 +98,10 @@ export default defineConfig({
       SITE_AUTHOR_BIO: envField.string({ context: 'client', access: 'public', default: 'Engineering leader focused on solving complex technical challenges through thoughtful architecture and pragmatic trade-off analysis.' }),
       SITE_AUTHOR_EMAIL: envField.string({ context: 'client', access: 'public', default: 'hello@example.com' }),
       SITE_AUTHOR_LOCATION: envField.string({ context: 'client', access: 'public', default: '' }),
-      
+
+      // Resume download link (empty string = hidden)
+      SITE_RESUME_URL: envField.string({ context: 'client', access: 'public', default: '' }),
+
       // Social media links (empty string = hidden)
       SOCIAL_GITHUB: envField.string({ context: 'client', access: 'public', default: '' }),
       SOCIAL_LINKEDIN: envField.string({ context: 'client', access: 'public', default: '' }),

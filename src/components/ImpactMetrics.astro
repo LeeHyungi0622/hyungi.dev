@@ -54,9 +54,10 @@ const { metrics } = Astro.props;
     list-style: none;
     padding: 1.5rem 1.75rem;
     margin: 0 0 2rem 0;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
+    background: var(--color-yellow);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-hard-sm);
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -70,7 +71,7 @@ const { metrics } = Astro.props;
 
   .metric-item:not(:last-child) {
     padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1.5px solid var(--color-border);
   }
 
   .metric-value {

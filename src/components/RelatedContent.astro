@@ -22,25 +22,23 @@ interface Props {
   relatedProjects?: string[];
   relatedDecisions?: string[];
   title?: string;
-  lang?: string;
 }
 
 const {
   relatedProjects = [],
   relatedDecisions = [],
   title = "Related",
-  lang = 'ko',
 } = Astro.props;
 
 const allProjects = await getCollection('projects');
 const allDecisions = await getCollection('decisions');
 
 const projects = relatedProjects
-  .map(slug => allProjects.find(p => p.id === `${lang}/${slug}`))
+  .map(slug => allProjects.find(p => p.id === slug))
   .filter((p): p is NonNullable<typeof p> => p !== undefined);
 
 const decisions = relatedDecisions
-  .map(slug => allDecisions.find(d => d.id === `${lang}/${slug}`))
+  .map(slug => allDecisions.find(d => d.id === slug))
   .filter((d): d is NonNullable<typeof d> => d !== undefined);
 
 const hasRelated = projects.length > 0 || decisions.length > 0;
@@ -71,10 +69,10 @@ function formatDate(date: Date): string {
           </h3>
           <ul class="related-list">
             {projects.map((project) => {
-              const slug = project.id.replace(`${lang}/`, '');
+              const slug = project.id;
               return (
                 <li>
-                  <a href={`/${lang}/projects/${slug}`} class="related-item">
+                  <a href={`/projects/${slug}`} class="related-item">
                     <span class="related-item-meta">{project.data.role} · {project.data.year}</span>
                     <span class="related-item-title">{project.data.title}</span>
                   </a>
@@ -97,10 +95,10 @@ function formatDate(date: Date): string {
           </h3>
           <ul class="related-list">
             {decisions.map((decision) => {
-              const slug = decision.id.replace(`${lang}/`, '');
+              const slug = decision.id;
               return (
                 <li>
-                  <a href={`/${lang}/decisions/${slug}`} class="related-item">
+                  <a href={`/decisions/${slug}`} class="related-item">
                     <span class="related-item-meta">{formatDate(decision.data.date)}</span>
                     <span class="related-item-title">{decision.data.title}</span>
                   </a>
@@ -118,12 +116,12 @@ function formatDate(date: Date): string {
   .related-content {
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--color-border);
+    border-top: 1.5px solid var(--color-border-subtle);
   }
 
   .related-title {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 800;
     margin-bottom: 1.5rem;
     letter-spacing: -0.01em;
   }
@@ -162,16 +160,17 @@ function formatDate(date: Date): string {
   .related-item {
     display: block;
     padding: 1rem 1.25rem;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
+    background: var(--color-bg);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-hard-sm);
     text-decoration: none;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .related-item:hover {
-    border-color: var(--color-text-muted);
-    background: var(--color-bg-elevated);
+    transform: translate(2px, 2px);
+    box-shadow: none;
   }
 
   .related-item-meta {

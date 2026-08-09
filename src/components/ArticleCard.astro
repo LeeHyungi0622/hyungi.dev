@@ -38,12 +38,9 @@ interface Props {
   
   /** Optional array of tags/categories for the article */
   tags?: string[];
-
-  /** Language prefix for URL construction (default: 'ko') */
-  lang?: string;
 }
 
-const { title, slug, description, publishDate, tags = [], lang = 'ko' } = Astro.props;
+const { title, slug, description, publishDate, tags = [] } = Astro.props;
 
 /**
  * Formats a date object into a human-readable string
@@ -63,7 +60,7 @@ function formatDate(date: Date): string {
 }
 ---
 
-<BaseCard href={`/${lang}/writing/${slug}`} class="article-card">
+<BaseCard href={`/writing/${slug}`} class="article-card">
   <Fragment slot="meta">{formatDate(publishDate)}</Fragment>
   <Fragment slot="title">{title}</Fragment>
   <Fragment slot="description">{description}</Fragment>
