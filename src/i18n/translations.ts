@@ -56,6 +56,7 @@ export const ui = {
   'stats.showing': '{total}개 중 {from}–{to}번째 글',
   'stats.articles': '글 {total}개',
   'case.overview': 'Overview',
+  'case.architecture': 'System Architecture',
   'case.problem': 'Problem',
   'case.constraints': 'Constraints',
   'case.approach': 'Approach',

@@ -107,7 +107,11 @@ const teamSizeText = teamSize
         <section class="case-study-section">
           <h2>{t('case.overview')}</h2>
           <p>{overview}</p>
-          {architectureImage && (
+        </section>
+
+        {architectureImage && (
+          <section class="case-study-section">
+            <h2>{t('case.architecture')}</h2>
             <figure class="architecture-figure">
               <img
                 src={architectureImage.src}
@@ -117,8 +121,8 @@ const teamSizeText = teamSize
               />
               <figcaption>{architectureImage.alt}</figcaption>
             </figure>
-          )}
-        </section>
+          </section>
+        )}
 
         <section class="case-study-section">
           <h2>{t('case.constraints')}</h2>
