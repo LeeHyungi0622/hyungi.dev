@@ -83,7 +83,7 @@ export const siteConfig = {
     name: getEnv('SITE_AUTHOR_NAME', 'Lee Hyungi'),
     
     /** Professional title or role */
-    title: getEnv('SITE_AUTHOR_TITLE', 'Data Platform Engineer'),
+    title: getEnv('SITE_AUTHOR_TITLE', '데이터 플랫폼 엔지니어'),
     
     /** Short biography or professional summary */
     bio: getEnv('SITE_AUTHOR_BIO', 'Engineering leader focused on solving complex technical challenges through thoughtful architecture and pragmatic trade-off analysis.'),

@@ -56,7 +56,7 @@ learnings:
   - "AWS 서비스 간 통신에서 IAM Role 설정 이슈를 직접 겪고 해결했습니다. 일반 IAM 메뉴에서 생성한 Role을 그대로 적용했을 때는 계속 에러가 발생했고, IoT Rule 생성 시 Role을 자동 생성하도록 하자 해결됐습니다 — IoT Rule에 적용되는 Role은 일반 IAM 목록과 별도로 관리된다는 것을 이 과정에서 알게 됐습니다."
   - "MQTT 브로커(mosquitto)가 클러스터링을 지원하지 않는다는 한계를 직접 확인했고, 향후 HiveMQ나 RabbitMQ처럼 클러스터링을 지원하는 브로커로 검증을 확장할 필요성을 인지했습니다."
   - "단일 기기 환경이라 실제 병목(Bottleneck)은 발생하지 않았지만, Kinesis shard 수와 Consumer 증가에 따른 비용·성능 트레이드오프를 미리 시뮬레이션해보며 확장 시나리오를 고민했습니다."
-featured: true
+featured: false
 status: completed
 order: 3
 ---
