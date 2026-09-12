@@ -42,29 +42,45 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
       const entries = groupedByCategory[categoryKey];
       if (!entries || entries.length === 0) return null;
       const info = categoryInfo[categoryKey];
+
+      const allItems = entries.flatMap((entry) => entry.data.items);
+      const subGroups: { label: string | null; items: typeof allItems }[] = [];
+      for (const item of allItems) {
+        const label = item.group ?? null;
+        let bucket = subGroups.find((g) => g.label === label);
+        if (!bucket) {
+          bucket = { label, items: [] };
+          subGroups.push(bucket);
+        }
+        bucket.items.push(item);
+      }
+
       return (
         <section class="category-section">
           <div class="category-header">
             <h2>{info.title}</h2>
             <p class="category-description">{info.description}</p>
           </div>
-          <div class="items-list">
-            {entries.map((entry) =>
-              entry.data.items.map((item) => (
-                <div class="item">
-                  <h3 class="item-name">
-                    {item.url ? (
-                      <a href={item.url} target="_blank" rel="noopener noreferrer">
-                        {item.name}
-                        <span class="external-link-icon" aria-hidden="true">↗</span>
-                      </a>
-                    ) : item.name}
-                  </h3>
-                  <p class="item-description">{item.description}</p>
-                </div>
-              ))
-            )}
-          </div>
+          {subGroups.map((group) => (
+            <div class="sub-group">
+              {group.label && <h3 class="sub-group-title">{group.label}</h3>}
+              <div class="items-list">
+                {group.items.map((item) => (
+                  <div class="item">
+                    <h4 class="item-name">
+                      {item.url ? (
+                        <a href={item.url} target="_blank" rel="noopener noreferrer">
+                          {item.name}
+                          <span class="external-link-icon" aria-hidden="true">↗</span>
+                        </a>
+                      ) : item.name}
+                    </h4>
+                    <p class="item-description">{item.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </section>
       );
     })}
@@ -97,17 +113,41 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
       margin: 0;
     }
 
+    .sub-group {
+      margin-bottom: 2.5rem;
+    }
+
+    .sub-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .sub-group-title {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+
     .items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .item {
+      padding: 1rem 1.25rem;
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--border-radius-md);
+      background: var(--color-bg);
     }
 
     .item-name {
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
+      font-size: 1rem;
+      margin-bottom: 0.375rem;
+      font-weight: 700;
+      letter-spacing: -0.005em;
     }
 
     .item-name a {
@@ -127,16 +167,16 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
     }
 
     .item-description {
-      font-size: 1rem;
-      line-height: 1.6;
+      font-size: 0.875rem;
+      line-height: 1.5;
       color: var(--color-text-secondary);
       margin: 0;
     }
 
     @media (max-width: 768px) {
       .category-header h2 { font-size: 1.5rem; }
-      .item-name { font-size: 1.125rem; }
-      .items-list { gap: 1.5rem; }
+      .item-name { font-size: 0.9375rem; }
+      .items-list { grid-template-columns: 1fr; gap: 0.75rem; }
     }
   </style>
 </BaseLayout>

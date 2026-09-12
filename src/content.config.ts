@@ -250,6 +250,8 @@ const usesCollection = defineCollection({
       name: z.string(),
       description: z.string(),
       url: z.string().url().optional(),
+      /** Optional sub-group label for organizing items within a category (e.g., "언어 & 런타임") */
+      group: z.string().optional(),
     })),
     
     /** Sort order within category */
