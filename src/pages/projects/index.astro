@@ -7,8 +7,16 @@ import { getCollection } from 'astro:content';
 import { t } from '../../i18n';
 
 const allProjects = await getCollection('projects');
+
+// 실무 + Featured 프로젝트를 최우선으로 선배치
+function priorityRank(p: (typeof allProjects)[number]): number {
+  return p.data.category === '실무' && p.data.featured ? 0 : 1;
+}
+
 const sortedProjects = allProjects
   .sort((a, b) => {
+    const rankDiff = priorityRank(a) - priorityRank(b);
+    if (rankDiff !== 0) return rankDiff;
     if (a.data.order !== undefined && b.data.order !== undefined) return a.data.order - b.data.order;
     if (a.data.order !== undefined) return -1;
     if (b.data.order !== undefined) return 1;
@@ -40,6 +48,7 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
           <ProjectCard
             title={project.data.title}
             slug={project.id}
+            category={project.data.category}
             outcomeSummary={project.data.outcomeSummary}
             role={project.data.role}
             year={project.data.year}

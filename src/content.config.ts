@@ -41,7 +41,10 @@ const projectsCollection = defineCollection({
   schema: z.object({
     /** Project title */
     title: z.string(),
-    
+
+    /** Project category — used for the corner badge on cards */
+    category: z.enum(['실무', '개인 프로젝트']),
+
     /** Your role in the project */
     role: z.string(),
     
@@ -65,7 +68,10 @@ const projectsCollection = defineCollection({
       src: z.string(),
       alt: z.string(),
     }).optional(),
-    
+
+    /** Show the System Architecture section with a "coming soon" placeholder when the diagram isn't ready yet */
+    architecturePending: z.boolean().optional(),
+
     /** Problem being addressed */
     problem: z.string(),
     

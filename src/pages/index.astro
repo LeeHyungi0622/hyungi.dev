@@ -65,6 +65,9 @@ const recentJourney = allJourney
           <div class="case-snapshots">
             {featuredProjects.map((project) => (
               <a href={`/projects/${project.id}`} class="case-snapshot">
+                <span class:list={['corner-badge', project.data.category === '실무' ? 'corner-badge--work' : 'corner-badge--personal']}>
+                  {project.data.category}
+                </span>
                 <span class="case-title">{project.data.title}</span>
                 <span class="case-outcome">{project.data.outcomeSummary}</span>
                 <div class="case-tags">
@@ -197,6 +200,7 @@ const recentJourney = allJourney
     }
 
     .case-snapshot {
+      position: relative;
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -215,11 +219,38 @@ const recentJourney = allJourney
       transform: translate(-2px, -2px);
     }
 
+    .corner-badge {
+      position: absolute;
+      top: -0.6rem;
+      left: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.6875rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      padding: 0.3rem 0.75rem;
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--border-radius-sm);
+      box-shadow: var(--shadow-hard-sm);
+      z-index: 1;
+    }
+
+    .corner-badge--work {
+      background: var(--color-accent);
+      color: #ffffff;
+    }
+
+    .corner-badge--personal {
+      background: var(--color-yellow);
+      color: var(--color-text);
+    }
+
     .case-title {
       display: block;
       font-size: 1rem;
       font-weight: 600;
       color: var(--color-text);
+      margin-top: 0.5rem;
       margin-bottom: 0.5rem;
       line-height: 1.4;
     }

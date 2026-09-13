@@ -29,6 +29,7 @@ import ForwardLink from './ForwardLink.astro';
 interface Props {
   title: string;
   slug: string;
+  category: '실무' | '개인 프로젝트';
   outcomeSummary: string;
   role: string;
   year: number;
@@ -37,7 +38,7 @@ interface Props {
   status?: 'completed' | 'ongoing' | 'archived';
 }
 
-const { title, slug, outcomeSummary, role, year, techStack = [], featured = false, status = 'completed' } = Astro.props;
+const { title, slug, category, outcomeSummary, role, year, techStack = [], featured = false, status = 'completed' } = Astro.props;
 
 // Show max 4 tech tags to keep card clean and consistent
 const displayTech = techStack.slice(0, 4);
@@ -53,6 +54,9 @@ const statusInfo = statusConfig[status];
 ---
 
 <BaseCard href={`/projects/${slug}`} class="project-card">
+  <span slot="badge" class:list={['corner-badge', category === '실무' ? 'corner-badge--work' : 'corner-badge--personal']}>
+    {category}
+  </span>
   <div slot="badge" class="card-badges">
     {featured && (
       <span class="featured-badge">
@@ -88,6 +92,32 @@ const statusInfo = statusConfig[status];
 </BaseCard>
 
 <style>
+  .corner-badge {
+    position: absolute;
+    top: -0.6rem;
+    left: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    padding: 0.3rem 0.75rem;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-hard-sm);
+    z-index: 1;
+  }
+
+  .corner-badge--work {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+
+  .corner-badge--personal {
+    background: var(--color-yellow);
+    color: var(--color-text);
+  }
+
   .card-badges {
     display: flex;
     align-items: center;

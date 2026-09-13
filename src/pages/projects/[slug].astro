@@ -23,8 +23,8 @@ const { project } = Astro.props;
 const { Content } = await render(project);
 
 const {
-  title, role, year, duration, teamSize, outcomeSummary,
-  overview, architectureImage, problem, constraints, approach,
+  title, category, role, year, duration, teamSize, outcomeSummary,
+  overview, architectureImage, architecturePending, problem, constraints, approach,
   keyDecisions, techStack, impact, learnings,
   relatedProjects, relatedDecisions, status,
 } = project.data;
@@ -73,6 +73,9 @@ const teamSizeText = teamSize
   <main class="case-study">
     <header class="case-study-header">
       <div class="header-badges">
+        <span class:list={['category-badge', category === '실무' ? 'category-badge--work' : 'category-badge--personal']}>
+          {category}
+        </span>
         {status && status !== 'completed' && (
           <span class:list={['status-badge', statusInfo.class]}>
             {statusInfo.label}
@@ -109,18 +112,40 @@ const teamSizeText = teamSize
           <p>{overview}</p>
         </section>
 
-        {architectureImage && (
+        {(architectureImage || architecturePending) && (
           <section class="case-study-section">
             <h2>{t('case.architecture')}</h2>
-            <figure class="architecture-figure">
-              <img
-                src={architectureImage.src}
-                alt={architectureImage.alt}
-                class="architecture-image"
-                loading="lazy"
-              />
-              <figcaption>{architectureImage.alt}</figcaption>
-            </figure>
+            {architectureImage ? (
+              <figure class="architecture-figure">
+                <div class="architecture-image-wrapper" data-architecture-trigger tabindex="0" role="button" aria-label={`${architectureImage.alt} 확대 보기`}>
+                  <img
+                    src={architectureImage.src}
+                    alt={architectureImage.alt}
+                    class="architecture-image"
+                    loading="lazy"
+                  />
+                  <span class="zoom-hint" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="11" cy="11" r="7"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      <line x1="11" y1="8" x2="11" y2="14"></line>
+                      <line x1="8" y1="11" x2="14" y2="11"></line>
+                    </svg>
+                    확대 보기
+                  </span>
+                </div>
+                <figcaption>{architectureImage.alt}</figcaption>
+              </figure>
+            ) : (
+              <div class="architecture-pending">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <path d="M21 15l-5-5L5 21"></path>
+                </svg>
+                <p>구성도 업데이트 예정입니다.</p>
+              </div>
+            )}
           </section>
         )}
 
@@ -204,6 +229,21 @@ const teamSizeText = teamSize
     </div>
   </main>
 
+  {architectureImage && (
+    <dialog class="image-lightbox" id="architecture-lightbox">
+      <div class="lightbox-toolbar">
+        <button type="button" class="lightbox-btn" data-zoom-out aria-label="축소">−</button>
+        <span class="lightbox-zoom-level" data-zoom-level>100%</span>
+        <button type="button" class="lightbox-btn" data-zoom-in aria-label="확대">+</button>
+        <button type="button" class="lightbox-btn" data-zoom-reset aria-label="원본 크기로">Reset</button>
+        <button type="button" class="lightbox-btn lightbox-close" data-lightbox-close aria-label="닫기">✕</button>
+      </div>
+      <div class="lightbox-viewport" data-lightbox-viewport>
+        <img class="lightbox-image" data-lightbox-image src="" alt="" draggable="false" />
+      </div>
+    </dialog>
+  )}
+
   <ScrollToTop />
 
   <style>
@@ -231,8 +271,29 @@ const teamSizeText = teamSize
       border-bottom: var(--border-width-thick) solid var(--color-border);
     }
 
-    .header-badges { margin-bottom: 0.75rem; }
-    .header-badges:empty { display: none; }
+    .header-badges { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.6875rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      padding: 0.3rem 0.75rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--border-radius-sm);
+      box-shadow: var(--shadow-hard-sm);
+    }
+
+    .category-badge--work {
+      background: var(--color-accent);
+      color: #ffffff;
+    }
+
+    .category-badge--personal {
+      background: var(--color-yellow);
+      color: var(--color-text);
+    }
 
     .status-badge {
       display: inline-flex;
@@ -374,11 +435,55 @@ const teamSizeText = teamSize
 
     .architecture-figure { margin: 2rem 0 0; padding: 0; }
 
+    .architecture-image-wrapper {
+      position: relative;
+      cursor: zoom-in;
+      overflow: hidden;
+      border-radius: var(--border-radius-md);
+    }
+
+    .architecture-image-wrapper:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
     .architecture-image {
       width: 100%;
       border-radius: var(--border-radius-md);
       border: var(--border-width) solid var(--color-border);
       display: block;
+      transition: transform 0.25s ease;
+    }
+
+    .architecture-image-wrapper:hover .architecture-image,
+    .architecture-image-wrapper:focus-visible .architecture-image {
+      transform: scale(1.015);
+    }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 0.75rem;
+      right: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--border-radius-sm);
+      box-shadow: var(--shadow-hard-sm);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      pointer-events: none;
+    }
+
+    .architecture-image-wrapper:hover .zoom-hint,
+    .architecture-image-wrapper:focus-visible .zoom-hint {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .architecture-figure figcaption {
@@ -386,6 +491,108 @@ const teamSizeText = teamSize
       color: var(--color-text-muted);
       text-align: center;
       margin-top: 0.75rem;
+    }
+
+    .architecture-pending {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 3rem 1.5rem;
+      border: var(--border-width) dashed var(--color-border-subtle);
+      border-radius: var(--border-radius-md);
+      color: var(--color-text-muted);
+    }
+
+    .architecture-pending p {
+      font-size: 0.9375rem;
+      font-weight: 600;
+    }
+
+    .image-lightbox {
+      padding: 0;
+      border: none;
+      border-radius: var(--border-radius-lg);
+      width: min(92vw, 1400px);
+      height: 90vh;
+      max-width: 92vw;
+      max-height: 90vh;
+      background: var(--color-bg);
+      box-shadow: var(--shadow-hard-lg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .image-lightbox::backdrop {
+      background: rgba(17, 17, 17, 0.6);
+    }
+
+    .lightbox-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-bottom: var(--border-width) solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    .lightbox-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2rem;
+      height: 2rem;
+      padding: 0 0.6rem;
+      font-weight: 800;
+      font-size: 1rem;
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+
+    .lightbox-btn:hover {
+      background: var(--color-yellow);
+    }
+
+    .lightbox-zoom-level {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      min-width: 3.5rem;
+      text-align: center;
+    }
+
+    .lightbox-close {
+      margin-left: auto;
+    }
+
+    .lightbox-viewport {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      background: var(--color-bg-secondary);
+    }
+
+    .lightbox-viewport.is-dragging {
+      cursor: grabbing;
+    }
+
+    .lightbox-image {
+      max-width: 100%;
+      max-height: 100%;
+      user-select: none;
+      will-change: transform;
+    }
+
+    @media (max-width: 768px) {
+      .zoom-hint { display: none; }
+      .image-lightbox { width: 96vw; height: 92vh; }
     }
 
     .impact-qualitative {
@@ -414,4 +621,136 @@ const teamSizeText = teamSize
       .decision-item { padding: 1.25rem; }
     }
   </style>
+
+  <script>
+    const dialog = document.getElementById('architecture-lightbox') as HTMLDialogElement | null;
+
+    if (dialog) {
+      const viewport = dialog.querySelector<HTMLDivElement>('[data-lightbox-viewport]')!;
+      const image = dialog.querySelector<HTMLImageElement>('[data-lightbox-image]')!;
+      const zoomLevelEl = dialog.querySelector<HTMLSpanElement>('[data-zoom-level]')!;
+      const zoomInBtn = dialog.querySelector<HTMLButtonElement>('[data-zoom-in]')!;
+      const zoomOutBtn = dialog.querySelector<HTMLButtonElement>('[data-zoom-out]')!;
+      const zoomResetBtn = dialog.querySelector<HTMLButtonElement>('[data-zoom-reset]')!;
+      const closeBtn = dialog.querySelector<HTMLButtonElement>('[data-lightbox-close]')!;
+
+      const MIN_SCALE = 1;
+      const MAX_SCALE = 4;
+      const STEP = 0.4;
+
+      let scale = 1;
+      let panX = 0;
+      let panY = 0;
+      let isDragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let panStartX = 0;
+      let panStartY = 0;
+      let closeTimer: ReturnType<typeof setTimeout> | null = null;
+
+      function applyTransform() {
+        image.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+        zoomLevelEl.textContent = `${Math.round(scale * 100)}%`;
+        viewport.classList.toggle('is-zoomed', scale > MIN_SCALE);
+      }
+
+      function setScale(next: number) {
+        scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, next));
+        if (scale === MIN_SCALE) {
+          panX = 0;
+          panY = 0;
+        }
+        applyTransform();
+      }
+
+      function cancelClose() {
+        if (closeTimer) {
+          clearTimeout(closeTimer);
+          closeTimer = null;
+        }
+      }
+
+      function scheduleClose() {
+        cancelClose();
+        closeTimer = setTimeout(() => {
+          if (dialog!.open) dialog!.close();
+        }, 220);
+      }
+
+      function openLightbox(src: string, alt: string) {
+        cancelClose();
+        if (dialog!.open) return;
+        image.src = src;
+        image.alt = alt;
+        scale = 1;
+        panX = 0;
+        panY = 0;
+        applyTransform();
+        dialog!.showModal();
+        document.body.style.overflow = 'hidden';
+      }
+
+      document.querySelectorAll<HTMLElement>('[data-architecture-trigger]').forEach((wrapper) => {
+        const img = wrapper.querySelector('img');
+        if (!img) return;
+        const trigger = () => openLightbox(img.currentSrc || img.src, img.alt);
+        wrapper.addEventListener('mouseenter', trigger);
+        wrapper.addEventListener('click', trigger);
+        wrapper.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            trigger();
+          }
+        });
+      });
+
+      dialog.addEventListener('mouseenter', cancelClose);
+      dialog.addEventListener('mouseleave', scheduleClose);
+
+      dialog.addEventListener('click', (e) => {
+        const rect = dialog.getBoundingClientRect();
+        const inside =
+          e.clientX >= rect.left && e.clientX <= rect.right &&
+          e.clientY >= rect.top && e.clientY <= rect.bottom;
+        if (!inside) dialog.close();
+      });
+
+      dialog.addEventListener('close', () => {
+        cancelClose();
+        document.body.style.overflow = '';
+      });
+
+      closeBtn.addEventListener('click', () => dialog.close());
+      zoomInBtn.addEventListener('click', () => setScale(scale + STEP));
+      zoomOutBtn.addEventListener('click', () => setScale(scale - STEP));
+      zoomResetBtn.addEventListener('click', () => setScale(1));
+
+      viewport.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        setScale(scale + (e.deltaY < 0 ? STEP : -STEP));
+      }, { passive: false });
+
+      viewport.addEventListener('mousedown', (e) => {
+        if (scale <= MIN_SCALE) return;
+        isDragging = true;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        panStartX = panX;
+        panStartY = panY;
+        viewport.classList.add('is-dragging');
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        panX = panStartX + (e.clientX - dragStartX);
+        panY = panStartY + (e.clientY - dragStartY);
+        applyTransform();
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+        viewport.classList.remove('is-dragging');
+      });
+    }
+  </script>
 </BaseLayout>
