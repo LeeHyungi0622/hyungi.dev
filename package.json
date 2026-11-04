@@ -20,7 +20,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
-    "build:aa": "astro check && astro build --mode aa --outDir dist-aa",
+    "build:aa": "astro check && NODE_ENV=aa astro build --mode aa --outDir dist-aa",
+    "deploy:aa": "npm run build:aa && npx wrangler deploy --config wrangler.aa.jsonc",
     "preview": "astro preview",
     "astro": "astro"
   },
