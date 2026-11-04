@@ -4,7 +4,7 @@ category: "실무"
 role: "Data Engineer & Tech Lead"
 year: 2024
 outcomeSummary: "플랜트 설비(압축기·터빈)의 센서 46개 태그를 폐쇄망 PI 시스템에서 수집·정규화하고, 외부에서 개발된 AI 모델(진단·예측·추천)을 Zeppelin 기반 이관 파이프라인에 통합해 웹으로 실시간 시각화한 설비 모니터링 시스템을 구축하고 2개 고객사 실증을 수행"
-overview: "석유화학·가스 분야 플랜트 고객사를 대상으로 한 설비 모니터링 시스템의 데이터 엔지니어링과 시스템 통합을 담당했습니다. 기존 폐쇄망에서 압축기·터빈 설비의 실시간 센서 데이터를 수집하던 PI 시스템에서 데이터를 수집하여 MS SQL에 적재하고, 외부에서 개발된 진단·예측·추천 AI 모델을 실제 운영 파이프라인에 통합해 결과를 웹으로 시각화하는 구조입니다. 수집 데이터가 여러 모델에서 공용으로 쓰여 데이터 정합성 확보가 핵심 요구였습니다."
+overview: "석유화학·가스 분야 플랜트 고객사를 대상으로 한 설비 모니터링 시스템의 데이터 엔지니어링과 시스템 통합을 담당했습니다. 기존 폐쇄망에서 압축기·터빈 설비의 실시간 센서 데이터를 수집하던 PI 시스템에서 데이터를 수집하여 MS SQL에 적재하고, 외부에서 개발된 진단·예측·추천 AI 모델을 실제 운영 파이프라인에 통합해 결과를 웹으로 시각화하는 구조입니다. 수집 데이터가 여러 모델에서 공용으로 쓰여 데이터 정합성 확보가 핵심 요구였습니다. 웹 시각화 계층은 전자정부표준프레임워크(eGovFrame) 기반 JSP/Spring으로 구현해 WAS(Tomcat)·PostgreSQL·Zeppelin을 Docker로 컨테이너화하고, 폐쇄망 현장마다 반복되던 설치 절차를 표준화했습니다."
 architectureImage:
   src: "/images/projects/ai-smart-plant-architecture.png"
   alt: "AI 스마트 플랜트 시스템 구성도 — WAS(Tomcat)·PostgreSQL·Apache Zeppelin 기반 AI 모델 통합, PI 시스템 원본 데이터 수집, MS SQL 적재 흐름"
@@ -35,7 +35,14 @@ keyDecisions:
     reasoning: "정상 데이터만 많고 이상 데이터가 극소수라 모델이 경계를 명확히 못 가렸습니다. 재구성 오차(autoencoder 방식)로 anomaly_score = mean(|입력 − 예측|)를 구하고, UCL = residuals_max × 1.5로 임계값을 정상 쪽에서 다소 올려 정상을 이상으로 오분류하는 것을 최소화했습니다(residuals_max는 모델·태그마다 다름)."
     alternatives:
       - "고정 임계값"
+  - decision: "WAS·DB·분석 도구 전체를 Docker로 컨테이너화해 현장 설치 절차 표준화"
+    reasoning: "폐쇄망 플랜트 현장마다 설치 작업을 매번 수동으로 반복해 설치 시간이 3시간가량 걸리고 현장별 편차가 컸습니다. 전자정부표준프레임워크(eGovFrame) 기반 JSP/Spring으로 구현한 WAS(Tomcat)·PostgreSQL·Zeppelin을 Docker로 전체 컨테이너화하고 설치 가이드를 표준화해, 인터넷이 차단된 환경에서도 동일한 절차로 빠르게 배포할 수 있도록 했습니다."
+    alternatives:
+      - "현장별 수동 설치 매뉴얼 유지"
+      - "VM 이미지 스냅샷 배포"
 techStack:
+  - "Java / JSP / Spring — 전자정부표준프레임워크(eGovFrame) 기반 WAS(Tomcat)"
+  - "Docker (WAS·PostgreSQL·Zeppelin 컨테이너화)"
   - "Python (pymssql / psycopg2)"
   - "Apache Zeppelin"
   - "MSSQL (원본 1차 적재)"
@@ -45,12 +52,16 @@ techStack:
   - "TensorFlow (.h5 진단·예측·추천 모델)"
 impact:
   metrics:
+    - label: "과제 규모"
+      value: "연간 3억 원 이상 (발주·협업: 한국가스공사, 현대오일뱅크)"
     - label: "센서 규모"
       value: "압축기·터빈 46개 태그"
     - label: "AI 모델"
       value: "진단·예측·추천 3종 (.h5) 통합"
     - label: "예측 / 모니터링"
       value: "현재시각 기준 30분 후까지 1분 단위 예측, 그래프 1시간 단위 샘플링"
+    - label: "현장 설치 시간"
+      value: "3시간 → 20분 (88.9% 단축, Docker 컨테이너화 + 설치 가이드 표준화)"
   qualitative: "외부에서 개발된 진단·예측·추천 AI 모델을 폐쇄망 현장의 실제 설비 데이터 파이프라인에 통합해 웹에서 실시간으로 시각화하는 시스템을 완성하고, 2개 고객사 대상 실증(2024.12)을 수행했습니다. 46개 태그 전부 정상 시나리오와 일부 이상 시나리오로 진단·예측·추천 흐름을 검증했습니다. 이상 상태는 설비 도면 위 태그를 기준정보(LL/L/Normal/H/HH) 대비 초록/노랑/빨강으로 시각화하고, Rule base 테이블로 태그 조합 기반 트러블슈팅을 지원합니다."
 learnings:
   - "AI 모델을 만든 것과, 그 모델을 실제 운영 파이프라인에 통합해 돌아가게 하는 것은 다른 일 — 통합·운영 관점에서 데이터 정합성과 정규화 기준(calibration range)을 잡는 것이 핵심이었다"

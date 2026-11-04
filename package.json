@@ -20,6 +20,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
+    "build:aa": "astro check && astro build --mode aa --outDir dist-aa",
     "preview": "astro preview",
     "astro": "astro"
   },

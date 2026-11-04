@@ -5,6 +5,8 @@ import ProjectCard from '../../components/ProjectCard.astro';
 import PageStats from '../../components/PageStats.astro';
 import { getCollection } from 'astro:content';
 import { t } from '../../i18n';
+import { siteConfig } from '../../config';
+import { AA_PROJECT_ORDER } from '../../lib/aaPersona';
 
 const allProjects = await getCollection('projects');
 
@@ -13,15 +15,19 @@ function priorityRank(p: (typeof allProjects)[number]): number {
   return p.data.category === '실무' && p.data.featured ? 0 : 1;
 }
 
-const sortedProjects = allProjects
-  .sort((a, b) => {
-    const rankDiff = priorityRank(a) - priorityRank(b);
-    if (rankDiff !== 0) return rankDiff;
-    if (a.data.order !== undefined && b.data.order !== undefined) return a.data.order - b.data.order;
-    if (a.data.order !== undefined) return -1;
-    if (b.data.order !== undefined) return 1;
-    return b.data.year - a.data.year;
-  });
+const sortedProjects = siteConfig.persona === 'aa'
+  ? allProjects
+      .filter((p) => p.data.category === '실무')
+      .sort((a, b) => AA_PROJECT_ORDER.indexOf(a.id) - AA_PROJECT_ORDER.indexOf(b.id))
+  : allProjects
+      .sort((a, b) => {
+        const rankDiff = priorityRank(a) - priorityRank(b);
+        if (rankDiff !== 0) return rankDiff;
+        if (a.data.order !== undefined && b.data.order !== undefined) return a.data.order - b.data.order;
+        if (a.data.order !== undefined) return -1;
+        if (b.data.order !== undefined) return 1;
+        return b.data.year - a.data.year;
+      });
 
 const totalProjects = sortedProjects.length;
 const featuredCount = sortedProjects.filter(p => p.data.featured).length;

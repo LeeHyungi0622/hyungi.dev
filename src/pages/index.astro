@@ -6,12 +6,17 @@ import ForwardLink from '../components/ForwardLink.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config';
 import { t } from '../i18n';
+import { AA_PROJECT_ORDER } from '../lib/aaPersona';
 
 const allProjects = await getCollection('projects');
-const featuredProjects = allProjects
-  .filter(p => p.data.featured === true)
-  .sort((a, b) => (a.data.order || 999) - (b.data.order || 999))
-  .slice(0, 6);
+const featuredProjects = siteConfig.persona === 'aa'
+  ? allProjects
+      .filter((p) => p.data.category === '실무')
+      .sort((a, b) => AA_PROJECT_ORDER.indexOf(a.id) - AA_PROJECT_ORDER.indexOf(b.id))
+  : allProjects
+      .filter(p => p.data.featured === true)
+      .sort((a, b) => (a.data.order || 999) - (b.data.order || 999))
+      .slice(0, 6);
 
 function splitRole(role: string): string[] {
   return role.split(/,|&/).map((r) => r.trim()).filter(Boolean);
@@ -59,7 +64,7 @@ const recentJourney = allJourney
 
         <div class="hero-right">
           <div class="section-header">
-            <h2><span class="highlight-sweep">{t('hero.section')}(Featured {featuredProjects.length})</span></h2>
+            <h2><span class="highlight-sweep">{t('hero.section')}</span></h2>
             <ForwardLink href="/projects" text={t('section.viewAll')} variant="muted" />
           </div>
           <div class="case-snapshots">

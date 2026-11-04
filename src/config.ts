@@ -49,7 +49,17 @@ export const siteConfig = {
    * Example: 'https://example.com'
    */
   url: getEnv('SITE_URL', 'https://hyungi.dev'),
-  
+
+  /**
+   * Site persona (build-time variant)
+   *
+   * 'general' = default data-platform-engineer-framed site.
+   * 'aa' = Application Architect-focused variant (built via `npm run build:aa`,
+   * loading .env.aa) — reorders/filters project case studies toward public-sector
+   * SI / CI-CD / infra-architecture relevance. See src/lib/aaPersona.ts.
+   */
+  persona: getEnv('SITE_PERSONA', 'general') as 'general' | 'aa',
+
   /**
    * Site language (ISO 639-1 code)
    * 
