@@ -58,7 +58,9 @@ const recentJourney = allJourney
           </p>
           <div class="hero-intro">
             <p set:html={t('hero.intro2')} />
-            <ForwardLink href="/journey" text={t('hero.journey')} variant="muted" />
+            {siteConfig.persona !== 'aa' && (
+              <ForwardLink href="/journey" text={t('hero.journey')} variant="muted" />
+            )}
           </div>
         </div>
 
@@ -87,7 +89,7 @@ const recentJourney = allJourney
       </div>
     </section>
 
-    <div class="two-col-sections">
+    <div class:list={['two-col-sections', { 'two-col-sections--single': siteConfig.persona === 'aa' }]}>
       <section class="recent-decisions">
         <div class="section-header">
           <h2>{t('section.recentDecisions')}</h2>
@@ -113,30 +115,32 @@ const recentJourney = allJourney
         )}
       </section>
 
-      <section class="recent-journey">
-        <div class="section-header">
-          <h2>{t('journey.heading')}</h2>
-          <ForwardLink href="/journey" text={t('section.viewAll')} variant="muted" />
-        </div>
-
-        {recentJourney.length > 0 ? (
-          <div class="decisions-list">
-            {recentJourney.map((entry) => {
-              const date = new Date(entry.data.date);
-              const formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-              return (
-                <a href="/journey" class="decision-item">
-                  <span class="decision-date">{formattedDate}</span>
-                  <h3 class="decision-title">{entry.data.title}</h3>
-                  <p class="decision-context">{entry.data.description}</p>
-                </a>
-              );
-            })}
+      {siteConfig.persona !== 'aa' && (
+        <section class="recent-journey">
+          <div class="section-header">
+            <h2>{t('journey.heading')}</h2>
+            <ForwardLink href="/journey" text={t('section.viewAll')} variant="muted" />
           </div>
-        ) : (
-          <p class="no-decisions">{t('journey.empty')}</p>
-        )}
-      </section>
+
+          {recentJourney.length > 0 ? (
+            <div class="decisions-list">
+              {recentJourney.map((entry) => {
+                const date = new Date(entry.data.date);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                return (
+                  <a href="/journey" class="decision-item">
+                    <span class="decision-date">{formattedDate}</span>
+                    <h3 class="decision-title">{entry.data.title}</h3>
+                    <p class="decision-context">{entry.data.description}</p>
+                  </a>
+                );
+              })}
+            </div>
+          ) : (
+            <p class="no-decisions">{t('journey.empty')}</p>
+          )}
+        </section>
+      )}
     </div>
   </main>
 
@@ -309,6 +313,10 @@ const recentJourney = allJourney
       display: grid;
       grid-template-columns: 0.85fr 1.15fr;
       gap: 2.5rem;
+    }
+
+    .two-col-sections--single {
+      grid-template-columns: 1fr;
     }
 
     .section-header {
