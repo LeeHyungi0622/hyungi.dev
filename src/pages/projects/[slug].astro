@@ -504,6 +504,7 @@ const teamSizeText = teamSize
     .image-lightbox {
       padding: 0;
       border: none;
+      margin: 0;
       border-radius: var(--border-radius-lg);
       width: min(92vw, 1400px);
       height: 90vh;
@@ -516,6 +517,10 @@ const teamSizeText = teamSize
     .image-lightbox[open] {
       display: flex;
       flex-direction: column;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .image-lightbox::backdrop {
@@ -681,11 +686,7 @@ const teamSizeText = teamSize
       });
 
       dialog.addEventListener('click', (e) => {
-        const rect = dialog.getBoundingClientRect();
-        const inside =
-          e.clientX >= rect.left && e.clientX <= rect.right &&
-          e.clientY >= rect.top && e.clientY <= rect.bottom;
-        if (!inside) dialog.close();
+        if (e.target === dialog) dialog.close();
       });
 
       dialog.addEventListener('close', () => {
