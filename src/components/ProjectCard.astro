@@ -2,9 +2,9 @@
 /**
  * ProjectCard Component
  * 
- * Displays a project or case study entry in a card format with role, year, outcome summary,
- * and technology stack. Extends BaseCard component with project-specific features including
- * an optional featured badge, status indicator, and automatic tech stack truncation.
+ * Displays a project or case study entry in a card format with year, outcome summary,
+ * and hashtags. Extends BaseCard component with project-specific features including
+ * an optional featured badge and status indicator.
  * 
  * @component
  * 
@@ -16,7 +16,6 @@
  *   outcomeSummary="Increased conversion rate by 45% and reduced cart abandonment"
  *   role="Lead Frontend Developer"
  *   year={2024}
- *   techStack={['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'Stripe']}
  *   featured={true}
  *   status="completed"
  * />
@@ -25,6 +24,7 @@
 
 import BaseCard from './BaseCard.astro';
 import ForwardLink from './ForwardLink.astro';
+import ProjectTags from './ProjectTags.astro';
 
 interface Props {
   title: string;
@@ -33,16 +33,11 @@ interface Props {
   outcomeSummary: string;
   role: string;
   year: number;
-  techStack?: string[];
   featured?: boolean;
   status?: 'completed' | 'ongoing' | 'archived';
 }
 
-const { title, slug, category, outcomeSummary, role, year, techStack = [], featured = false, status = 'completed' } = Astro.props;
-
-// Show max 4 tech tags to keep card clean and consistent
-const displayTech = techStack.slice(0, 4);
-const hasMoreTech = techStack.length > 4;
+const { title, slug, category, outcomeSummary, role, year, featured = false, status = 'completed' } = Astro.props;
 
 // Status display configuration
 const statusConfig = {
@@ -73,20 +68,13 @@ const statusInfo = statusConfig[status];
     )}
   </div>
   
-  <Fragment slot="meta">{role} · {year}</Fragment>
+  <Fragment slot="meta">{year}</Fragment>
   <Fragment slot="title">{title}</Fragment>
   <Fragment slot="description">{outcomeSummary}</Fragment>
   
-  {displayTech.length > 0 && (
-    <div slot="tags" class="tags-list">
-      {displayTech.map((tech) => (
-        <span class="tag">{tech}</span>
-      ))}
-      {hasMoreTech && (
-        <span class="tag-more">+{techStack.length - 4}</span>
-      )}
-    </div>
-  )}
+  <div slot="tags" class="tags-list">
+    <ProjectTags role={role} slug={slug} />
+  </div>
   
   <ForwardLink text="View case study" />
 </BaseCard>
@@ -170,9 +158,4 @@ const statusInfo = statusConfig[status];
     color: var(--color-text-muted);
   }
 
-  .tag-more {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    color: var(--color-text-muted);
-  }
 </style>
