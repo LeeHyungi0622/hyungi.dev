@@ -16,7 +16,7 @@ export const AA_PROJECT_ORDER = [
 
 /**
  * Nav items and homepage sections hidden on the AA persona build — AA position
- * applications are being prepared now and don't need 글(Writing)/여정(Journey)
- * surfaced yet.
+ * applications are being prepared now and don't need 글(Writing)/여정(Journey)/
+ * 의사결정(Decisions) surfaced yet.
  */
-export const AA_HIDDEN_HREFS = ['/writing', '/journey'];
+export const AA_HIDDEN_HREFS = ['/writing', '/journey', '/decisions'];
