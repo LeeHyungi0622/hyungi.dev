@@ -191,22 +191,24 @@ const teamSizeText = teamSize
         <section class="case-study-section">
           <h2>{t('case.keyDecisions')}</h2>
           <div class="decisions-list">
-            {keyDecisions.map((decision) => (
-              <div class="decision-item">
-                <h3 class="decision-title">{decision.decision}</h3>
-                <div class="decision-reasoning">
-                  <strong>{t('case.reasoning')}</strong>
-                  <p>{decision.reasoning}</p>
-                </div>
-                {decision.alternatives && decision.alternatives.length > 0 && (
-                  <div class="decision-alternatives">
-                    <strong>{t('case.alternatives')}</strong>
-                    <ul>
-                      {decision.alternatives.map((alt) => <li>{alt}</li>)}
-                    </ul>
+            {keyDecisions.map((decision, i) => (
+              <details class="decision-item" open={i === 0}>
+                <summary class="decision-title">{decision.decision}</summary>
+                <div class="decision-body">
+                  <div class="decision-reasoning">
+                    <strong>{t('case.reasoning')}</strong>
+                    <p>{decision.reasoning}</p>
                   </div>
-                )}
-              </div>
+                  {decision.alternatives && decision.alternatives.length > 0 && (
+                    <div class="decision-alternatives">
+                      <strong>{t('case.alternatives')}</strong>
+                      <ul>
+                        {decision.alternatives.map((alt) => <li>{alt}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </details>
             ))}
           </div>
         </section>
@@ -389,11 +391,42 @@ const teamSizeText = teamSize
     }
 
     .decision-title {
-      font-size: 1.125rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 1.0625rem;
       font-weight: 800;
-      margin-bottom: 0.75rem;
       color: var(--color-text);
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
     }
+
+    .decision-title::-webkit-details-marker { display: none; }
+
+    .decision-title::after {
+      content: "";
+      flex-shrink: 0;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-right: 2px solid var(--color-text-muted);
+      border-bottom: 2px solid var(--color-text-muted);
+      transform: rotate(45deg);
+      transition: transform 0.15s ease;
+      margin-top: -0.2rem;
+    }
+
+    .decision-item[open] .decision-title::after {
+      transform: rotate(-135deg);
+      margin-top: 0.2rem;
+    }
+
+    .decision-item:not([open]) .decision-title:hover {
+      color: var(--color-accent);
+    }
+
+    .decision-body { margin-top: 0.75rem; }
 
     .decision-reasoning, .decision-alternatives { margin-top: 0.75rem; }
 
