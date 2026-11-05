@@ -72,11 +72,11 @@ const projectsCollection = defineCollection({
     /** Show the System Architecture section with a "coming soon" placeholder when the diagram isn't ready yet */
     architecturePending: z.boolean().optional(),
 
-    /** Supplementary deployment/runbook artifact images (e.g. redacted excerpts from an internal deployment guide) */
-    deploymentArtifacts: z.array(z.object({
+    /** Supplementary deployment/runbook PDF (e.g. a redacted excerpt from an internal deployment guide), viewable inline */
+    deploymentGuide: z.object({
       src: z.string(),
-      alt: z.string(),
-    })).optional(),
+      title: z.string(),
+    }).optional(),
 
     /** Problem being addressed */
     problem: z.string(),
