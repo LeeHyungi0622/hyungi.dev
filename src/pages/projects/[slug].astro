@@ -374,13 +374,14 @@ const teamSizeText = teamSize
     }
 
     .decisions-list {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      align-items: start;
     }
 
     .decision-item {
-      padding: 1.5rem;
+      padding: 1.25rem;
       border: var(--border-width) solid var(--color-border);
       border-radius: var(--border-radius-md);
       box-shadow: var(--shadow-hard-sm);
@@ -388,13 +389,13 @@ const teamSizeText = teamSize
     }
 
     .decision-title {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       font-weight: 800;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       color: var(--color-text);
     }
 
-    .decision-reasoning, .decision-alternatives { margin-top: 1rem; }
+    .decision-reasoning, .decision-alternatives { margin-top: 0.75rem; }
 
     .decision-reasoning strong, .decision-alternatives strong {
       display: block;
@@ -406,7 +407,8 @@ const teamSizeText = teamSize
     }
 
     .decision-reasoning p {
-      font-size: 1.0625rem;
+      font-size: 0.9375rem;
+      line-height: 1.55;
       margin-top: 0.5rem;
       color: var(--color-text-secondary);
     }
@@ -418,8 +420,8 @@ const teamSizeText = teamSize
     }
 
     .decision-alternatives li {
-      font-size: 1.0625rem;
-      line-height: 1.6;
+      font-size: 0.9375rem;
+      line-height: 1.5;
       padding: 0.25rem 0;
       padding-left: 1.25rem;
       position: relative;
@@ -621,6 +623,7 @@ const teamSizeText = teamSize
   </style>
 
   <script>
+    function initArchitectureLightbox() {
     const dialog = document.getElementById('architecture-lightbox') as HTMLDialogElement | null;
 
     if (dialog) {
@@ -725,5 +728,8 @@ const teamSizeText = teamSize
         viewport.classList.remove('is-dragging');
       });
     }
+    }
+
+    document.addEventListener('astro:page-load', initArchitectureLightbox);
   </script>
 </BaseLayout>
