@@ -3,8 +3,8 @@
   // worker, serving the ./dist-aa build (produced by `npm run build:aa`).
   //
   // First deploy: `npm run deploy:aa`, then in the Cloudflare dashboard attach
-  // aa.hyungi.dev as a Custom Domain — Workers & Pages → hyungi-dev-aa → Settings
-  // → Domains & Routes → Add Custom Domain (same way hyungi-dev's domain is bound).
+  // architect.hyungi.dev as a Custom Domain — Workers & Pages → hyungi-dev-aa →
+  // Settings → Domains & Routes → Add Custom Domain (same way hyungi-dev's domain is bound).
   "name": "hyungi-dev-aa",
   "compatibility_date": "2026-07-07",
   "assets": {
