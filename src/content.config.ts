@@ -69,6 +69,12 @@ const projectsCollection = defineCollection({
       alt: z.string(),
     }).optional(),
 
+    /** Additional diagrams shown after architectureImage */
+    extraArchitectureImages: z.array(z.object({
+      src: z.string(),
+      alt: z.string(),
+    })).optional(),
+
     /** Show the System Architecture section with a "coming soon" placeholder when the diagram isn't ready yet */
     architecturePending: z.boolean().optional(),
 
