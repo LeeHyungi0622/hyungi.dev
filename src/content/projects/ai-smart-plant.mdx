@@ -8,6 +8,11 @@ overview: "석유화학·가스 분야 플랜트 고객사를 대상으로 한 �
 architectureImage:
   src: "/images/projects/ai-smart-plant-architecture.png"
   alt: "AI 스마트 플랜트 시스템 구성도 — WAS(Tomcat)·PostgreSQL·Apache Zeppelin 기반 AI 모델 통합, PI 시스템 원본 데이터 수집, MS SQL 적재 흐름"
+deploymentArtifacts:
+  - src: "/images/projects/ai-smart-plant-deployment-ta.png"
+    alt: "폐쇄망 현장배포 TA(Technical Architecture) — WAS·PostgreSQL·Apache Zeppelin을 Docker bridge network로 묶고, MLOps가 마운트된 AI 모델 파일을 교체하는 구조. 직접 작성한 배포 절차서에서 발췌 (소속 정보 등 민감 항목은 가림 처리)"
+  - src: "/images/projects/ai-smart-plant-deployment-guide.png"
+    alt: "폐쇄망 환경 현장 설치 전용 배포 가이드 문서 — 표지, 제/개정 이력, 목차, 설치 개요 (직접 작성, 소속 정보 등 민감 항목은 가림 처리)"
 problem: "AI 모델 자체는 외부 연구팀이 개발했지만, 그 모델이 실제 설비 데이터로 돌아가려면 폐쇄망·보안 이관 환경에서 센서 데이터를 수집·정규화해 모델 입력 형태로 맞추는 파이프라인이 필요했습니다. 외부(개발 측)에서는 센서 태그의 가상 ID만 알고 실제 매핑은 현장에서만 확인 가능했으며, 원본 데이터는 여러 모델이 공용으로 사용해 정합성이 중요했습니다. 또한 이상 데이터가 정상 데이터보다 극소수라 모델이 정상/이상 패턴을 명확히 가르지 못하는 데이터 불균형 문제가 있었습니다."
 constraints:
   - "폐쇄망 + 보안 이관 — 외부 개발 측은 실제 센서 매핑을 알 수 없고 현장에서만 확인 가능"

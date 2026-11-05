@@ -57,6 +57,7 @@ export const ui = {
   'stats.articles': '글 {total}개',
   'case.overview': 'Overview',
   'case.architecture': 'System Architecture',
+  'case.deploymentArtifacts': '배포 가이드 산출물',
   'case.problem': 'Problem',
   'case.constraints': 'Constraints',
   'case.approach': 'Approach',
