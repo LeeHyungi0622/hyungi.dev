@@ -7,16 +7,16 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '../config';
 import { t } from '../i18n';
 import ProjectTags from '../components/ProjectTags.astro';
-import { AA_PROJECT_ORDER } from '../lib/aaPersona';
+import { compareLatestProjects } from '../lib/projectYears';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = siteConfig.persona === 'aa'
   ? allProjects
       .filter((p) => p.data.category === '실무')
-      .sort((a, b) => AA_PROJECT_ORDER.indexOf(a.id) - AA_PROJECT_ORDER.indexOf(b.id))
+      .sort(compareLatestProjects)
   : allProjects
       .filter(p => p.data.featured === true)
-      .sort((a, b) => (a.data.order || 999) - (b.data.order || 999))
+      .sort(compareLatestProjects)
       .slice(0, 6);
 
 const allDecisions = await getCollection('decisions');

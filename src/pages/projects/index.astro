@@ -6,8 +6,7 @@ import PageStats from '../../components/PageStats.astro';
 import { getCollection } from 'astro:content';
 import { t } from '../../i18n';
 import { siteConfig } from '../../config';
-import { AA_PROJECT_ORDER } from '../../lib/aaPersona';
-import { formatProjectYears, latestProjectYear } from '../../lib/projectYears';
+import { compareLatestProjects, formatProjectYears } from '../../lib/projectYears';
 
 const allProjects = await getCollection('projects');
 
@@ -16,15 +15,9 @@ function priorityRank(p: (typeof allProjects)[number]): number {
   return p.data.category === '실무' && p.data.featured ? 0 : 1;
 }
 
-function compareLatest(a: (typeof allProjects)[number], b: (typeof allProjects)[number]): number {
-  return latestProjectYear(b.data) - latestProjectYear(a.data)
-    || b.data.year - a.data.year
-    || AA_PROJECT_ORDER.indexOf(a.id) - AA_PROJECT_ORDER.indexOf(b.id);
-}
-
 const sortedProjects = siteConfig.persona === 'aa'
-  ? allProjects.filter((p) => p.data.category === '실무').sort(compareLatest)
-  : allProjects.sort((a, b) => priorityRank(a) - priorityRank(b) || compareLatest(a, b));
+  ? allProjects.filter((p) => p.data.category === '실무').sort(compareLatestProjects)
+  : allProjects.sort((a, b) => priorityRank(a) - priorityRank(b) || compareLatestProjects(a, b));
 
 const totalProjects = sortedProjects.length;
 ---

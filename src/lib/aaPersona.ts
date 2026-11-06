@@ -1,8 +1,8 @@
 /**
  * AA (Application Architect) persona project ordering
  *
- * Homepage order on the AA persona, by relevance to public-sector SI / application
- * architecture roles. Also breaks ties in the latest-first projects page.
+ * Relevance to public-sector SI / application architecture roles, used to break
+ * ties when projects are sorted latest-first.
  */
 export const AA_PROJECT_ORDER = [
   'ai-smart-plant',
