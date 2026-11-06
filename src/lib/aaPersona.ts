@@ -1,10 +1,8 @@
 /**
  * AA (Application Architect) persona project ordering
  *
- * When siteConfig.persona === 'aa', project listings show only 실무 (professional)
- * case studies, ordered by relevance to public-sector SI / application architecture
- * roles — CI/CD, infra architecture, eGovFrame, system standards — rather than by
- * the default featured/order/year sort.
+ * Homepage order on the AA persona, by relevance to public-sector SI / application
+ * architecture roles. Also breaks ties in the latest-first projects page.
  */
 export const AA_PROJECT_ORDER = [
   'ai-smart-plant',

@@ -48,8 +48,11 @@ const projectsCollection = defineCollection({
     /** Your role in the project */
     role: z.string(),
     
-    /** Year the project was completed */
+    /** Year the project started, or the only year for a single-year project */
     year: z.number(),
+
+    /** Final year for a project spanning multiple years */
+    endYear: z.number().optional(),
     
     /** Project duration (e.g., "3 months", "1.5 years") */
     duration: z.string().optional(),

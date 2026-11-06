@@ -17,6 +17,7 @@
  */
 
 import { getCollection } from 'astro:content';
+import { formatProjectYears } from '../lib/projectYears';
 
 interface Props {
   relatedProjects?: string[];
@@ -73,7 +74,7 @@ function formatDate(date: Date): string {
               return (
                 <li>
                   <a href={`/projects/${slug}`} class="related-item">
-                    <span class="related-item-meta">{project.data.role} · {project.data.year}</span>
+                    <span class="related-item-meta">{project.data.role} · {formatProjectYears(project.data)}</span>
                     <span class="related-item-title">{project.data.title}</span>
                   </a>
                 </li>

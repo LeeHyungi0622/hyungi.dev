@@ -15,7 +15,7 @@
  *   slug="ecommerce-redesign"
  *   outcomeSummary="Increased conversion rate by 45% and reduced cart abandonment"
  *   role="Lead Frontend Developer"
- *   year={2024}
+ *   years="2024"
  *   status="completed"
  * />
  * ```
@@ -31,11 +31,11 @@ interface Props {
   category: '실무' | '개인 프로젝트';
   outcomeSummary: string;
   role: string;
-  year: number;
+  years: string;
   status?: 'completed' | 'ongoing' | 'archived';
 }
 
-const { title, slug, category, outcomeSummary, role, year, status = 'completed' } = Astro.props;
+const { title, slug, category, outcomeSummary, role, years, status = 'completed' } = Astro.props;
 
 // Status display configuration
 const statusConfig = {
@@ -58,7 +58,7 @@ const statusInfo = statusConfig[status];
     )}
   </div>
   
-  <Fragment slot="meta">{year}</Fragment>
+  <Fragment slot="meta">{years}</Fragment>
   <Fragment slot="title">{title}</Fragment>
   <Fragment slot="description">{outcomeSummary}</Fragment>
   

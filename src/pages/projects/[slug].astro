@@ -9,6 +9,7 @@ import ImpactMetrics from '../../components/ImpactMetrics.astro';
 import { getCollection, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '../../utils/readingTime';
 import { t } from '../../i18n';
+import { formatProjectYears } from '../../lib/projectYears';
 
 export async function getStaticPaths() {
   const allProjects = await getCollection('projects');
@@ -86,7 +87,7 @@ const teamSizeText = teamSize
       <div class="case-study-meta">
         <span class="meta-item">{role}</span>
         <span class="meta-separator">·</span>
-        <span class="meta-item">{year}</span>
+        <span class="meta-item">{formatProjectYears(project.data)}</span>
         {duration && (
           <>
             <span class="meta-separator">·</span>
