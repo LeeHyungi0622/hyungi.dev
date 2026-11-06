@@ -5,17 +5,17 @@ role: "Personal Data Engineering Project"
 year: 2026
 teamSize: 1
 outcomeSummary: "Kiva 계열 창고 자동화 로봇의 위치·배터리·작업 이벤트를 합성 데이터로 생성해, 데이터 특성별로 Kafka Topic·저장소·acks 전략을 다르게 설계하고 Grafana로 Fleet 운영 지표를 모니터링하는 파이프라인을 설계·구축 중인 개인 프로젝트입니다."
-overview: "창고 내 AMR(자율이동로봇) 10대가 Pod(이동식 선반)를 들어올려 피킹 스테이션으로 운반하는 시나리오를 합성 데이터 생성기로 시뮬레이션하고, 이 데이터를 Kafka 기반 파이프라인으로 수집·적재·모니터링합니다. 위치·배터리·작업 이벤트라는 세 가지 데이터가 서로 다른 특성(빈도, 유실 허용도)을 갖는다는 점에 착안해, Topic 분리부터 저장소 선택까지 하나의 일관된 설계 기준으로 구성했습니다."
+overview: "창고 내 AMR(자율이동로봇) 10대가 Pod(이동식 선반)를 들어올려 피킹 스테이션으로 운반하는 시나리오를 합성 데이터 생성기로 시뮬레이션하고, 이 데이터를 Kafka 기반 파이프라인으로 수집·적재·모니터링합니다.\n위치·배터리·작업 이벤트라는 세 가지 데이터가 서로 다른 특성(빈도, 유실 허용도)을 갖는다는 점에 착안해, Topic 분리부터 저장소 선택까지 하나의 일관된 설계 기준으로 구성했습니다."
 architectureImage:
   src: "/images/projects/kiva_picking_robot.drawio.png"
   alt: "창고 로봇 텔레메트리 파이프라인 구성도 — 로봇 on-board Producer → Zookeeper/Kafka 클러스터 → Consumer → ELK/Burrow (점진적으로 업데이트 예정)"
-problem: "이전 Kafka+ELK+Grafana 프로젝트(2022)는 Twitter API 로그를 소재로 Kafka 클러스터의 고가용성·Consumer Lag 모니터링 구조를 검증하는 데 집중했습니다. 이번에는 지원 중인 데이터 엔지니어 직무(물류 자동화)와 도메인을 맞추면서, 단일 Topic에 모든 데이터를 밀어넣던 이전 방식에서 벗어나 '데이터 특성에 따라 파이프라인 설계를 어떻게 다르게 가져가야 하는가'라는 질문에 집중하고자 했습니다."
+problem: "이전 Kafka+ELK+Grafana 프로젝트(2022)는 Twitter API 로그를 소재로 Kafka 클러스터의 고가용성·Consumer Lag 모니터링 구조를 검증하는 데 집중했습니다.\n이번에는 지원 중인 데이터 엔지니어 직무(물류 자동화)와 도메인을 맞추면서, 단일 Topic에 모든 데이터를 밀어넣던 이전 방식에서 벗어나 '데이터 특성에 따라 파이프라인 설계를 어떻게 다르게 가져가야 하는가'라는 질문에 집중하고자 했습니다."
 constraints:
   - "실제 물류 자동화 로봇(Kiva 계열) 하드웨어 없이, 합성 데이터 생성기로 현실적인 텔레메트리를 만들어야 함"
   - "위치(고빈도·유실 허용) / 배터리(중빈도) / 작업 이벤트(저빈도·유실 불가)라는 서로 다른 데이터 특성을 하나의 파이프라인 안에서 각각에 맞게 처리해야 함"
   - "GPU 기반 로봇 시뮬레이터(Isaac Sim) 대신 가벼운 방식으로 대체하되, 도메인 신뢰도는 유지해야 함"
   - "배포 인프라를 처음부터 K8s로 시작하지 않고, 학습 중인 K3s·K8s 개념을 단계적으로 반영해야 함"
-approach: "(1) 도메인 모델링. Kiva 계열 Pod 리트리버 로봇의 실제 동작(IDLE → MOVING_TO_POD → LIFTING → MOVING_TO_STATION → WAITING_AT_STATION → RETURNING)을 상태 머신으로 정의하고, 로봇이 아닌 사람이 스테이션에서 실제 피킹을 수행한다는 점을 데이터 설계에 반영했습니다. (2) Kafka Topic 설계. 위치(robot.position)·배터리(robot.battery)·작업 이벤트(task.events) 3개 Topic으로 분리하고, 데이터 특성에 따라 파티션 수·acks·retention을 각각 다르게 설정했습니다. 특히 task.events만 acks=all + min.insync.replicas=2로 구성해 유실 불가 데이터에 대한 안전장치를 별도로 두었습니다. (3) 저장소 이원화. 시계열 데이터(위치·배터리)는 TimescaleDB, 이벤트 데이터(작업 이벤트)는 Elasticsearch로 나눠 적재해, Topic 분리 논리를 저장소 계층까지 일관되게 연장했습니다. (4) 스키마 및 배포 전략 단계화. 스키마는 JSON으로 먼저 구축한 뒤 Avro+Schema Registry로 확장하고, 배포는 Docker Compose → K3s → K8s(표준) 순서로 인프라 성숙도를 단계적으로 높여가는 방식을 채택했습니다."
+approach: "### (1) 도메인 모델링\nKiva 계열 Pod 리트리버 로봇의 실제 동작(IDLE → MOVING_TO_POD → LIFTING → MOVING_TO_STATION → WAITING_AT_STATION → RETURNING)을 상태 머신으로 정의하고, 로봇이 아닌 사람이 스테이션에서 실제 피킹을 수행한다는 점을 데이터 설계에 반영했습니다.\n### (2) Kafka Topic 설계\n위치(robot.position)·배터리(robot.battery)·작업 이벤트(task.events) 3개 Topic으로 분리하고, 데이터 특성에 따라 파티션 수·acks·retention을 각각 다르게 설정했습니다.\n특히 task.events만 acks=all + min.insync.replicas=2로 구성해 유실 불가 데이터에 대한 안전장치를 별도로 두었습니다.\n### (3) 저장소 이원화\n시계열 데이터(위치·배터리)는 TimescaleDB, 이벤트 데이터(작업 이벤트)는 Elasticsearch로 나눠 적재해, Topic 분리 논리를 저장소 계층까지 일관되게 연장했습니다.\n### (4) 스키마 및 배포 전략 단계화\n스키마는 JSON으로 먼저 구축한 뒤 Avro+Schema Registry로 확장하고, 배포는 Docker Compose → K3s → K8s(표준) 순서로 인프라 성숙도를 단계적으로 높여가는 방식을 채택했습니다."
 keyDecisions:
   - decision: "Isaac Sim 대신 자체 합성 데이터 생성기 채택"
     reasoning: "Isaac Sim은 RTX GPU(VRAM 16GB 이상)가 필수라 로컬 Mac 환경에서 실행이 불가능했고, 클라우드 GPU로 우회하더라도 로보틱스 시뮬레이터 자체를 학습하는 데 상당한 시간이 소요됩니다. 지원 직무(Data Engineer)에서 실제로 평가받는 지점은 시뮬레이터 완성도가 아니라 파이프라인 설계 판단력이라고 보고, 확률 모델 기반 합성 데이터 생성으로 방향을 바꿔 그 시간을 Kafka·저장소·스키마 설계에 재투자했습니다."

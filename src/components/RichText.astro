@@ -1,0 +1,56 @@
+---
+interface Props {
+  text: string;
+}
+
+const lines = Astro.props.text.split('\n').map((line) => line.trim()).filter(Boolean);
+const inlineParts = (line: string) => line.split(/`([^`]+)`/);
+---
+
+<div class="rich-text">
+  {lines.map((line) =>
+    line.startsWith('### ') ? (
+      <h3>{line.slice(4)}</h3>
+    ) : (
+      <p>{inlineParts(line).map((part, i) => (i % 2 ? <code>{part}</code> : part))}</p>
+    )
+  )}
+</div>
+
+<style>
+  .rich-text p {
+    margin: 0 0 0.875rem;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .rich-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rich-text h3 {
+    margin: 1.75rem 0 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 800;
+    line-height: 1.4;
+    color: var(--color-text);
+  }
+
+  .rich-text h3:first-child {
+    margin-top: 0;
+  }
+
+  .rich-text code {
+    padding: 0.1em 0.35em;
+    font-size: 0.9em;
+    background: var(--color-bg-secondary);
+    border-radius: var(--border-radius-sm);
+  }
+
+  @media (max-width: 768px) {
+    .rich-text p {
+      font-size: 1rem;
+    }
+  }
+</style>

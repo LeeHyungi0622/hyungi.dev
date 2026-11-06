@@ -6,6 +6,7 @@ import ScrollToTop from '../../components/ScrollToTop.astro';
 import BackLink from '../../components/BackLink.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import ImpactMetrics from '../../components/ImpactMetrics.astro';
+import RichText from '../../components/RichText.astro';
 import { getCollection, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '../../utils/readingTime';
 import { t } from '../../i18n';
@@ -119,7 +120,7 @@ const teamSizeText = teamSize
       <div class="case-study-main">
         <section class="case-study-section">
           <h2>{t('case.overview')}</h2>
-          <p class="overview-text">{overview}</p>
+          <RichText text={overview} />
         </section>
 
         {(architectureImage || architecturePending) && (
@@ -211,12 +212,12 @@ const teamSizeText = teamSize
       <div class="case-study-sidebar">
         <section class="case-study-section">
           <h2>{t('case.problem')}</h2>
-          <p>{problem}</p>
+          <RichText text={problem} />
         </section>
 
         <section class="case-study-section">
           <h2>{t('case.approach')}</h2>
-          <p>{approach}</p>
+          <RichText text={approach} />
         </section>
 
         <section class="case-study-section">
@@ -498,8 +499,6 @@ const teamSizeText = teamSize
       left: 0;
       color: var(--color-accent);
     }
-
-    .overview-text { white-space: pre-line; }
 
     .architecture-figure { margin: 2rem 0 0; padding: 0; }
 
