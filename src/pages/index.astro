@@ -70,9 +70,11 @@ const recentJourney = allJourney
           <div class="case-snapshots">
             {featuredProjects.map((project) => (
               <a href={`/projects/${project.id}`} class="case-snapshot">
-                <span class:list={['corner-badge', project.data.category === '실무' ? 'corner-badge--work' : 'corner-badge--personal']}>
-                  {project.data.category}
-                </span>
+                {siteConfig.persona !== 'aa' && (
+                  <span class:list={['corner-badge', project.data.category === '실무' ? 'corner-badge--work' : 'corner-badge--personal']}>
+                    {project.data.category}
+                  </span>
+                )}
                 <span class="case-title">{project.data.title}</span>
                 <span class="case-outcome">{project.data.outcomeSummary}</span>
                 <div class="case-tags">

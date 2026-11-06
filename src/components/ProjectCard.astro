@@ -23,6 +23,7 @@
 
 import BaseCard from './BaseCard.astro';
 import ForwardLink from './ForwardLink.astro';
+import { siteConfig } from '../config';
 import ProjectTags from './ProjectTags.astro';
 
 interface Props {
@@ -47,9 +48,11 @@ const statusInfo = statusConfig[status];
 ---
 
 <BaseCard href={`/projects/${slug}`} class="project-card">
-  <span slot="badge" class:list={['corner-badge', category === '실무' ? 'corner-badge--work' : 'corner-badge--personal']}>
-    {category}
-  </span>
+  {siteConfig.persona !== 'aa' && (
+    <span slot="badge" class:list={['corner-badge', category === '실무' ? 'corner-badge--work' : 'corner-badge--personal']}>
+      {category}
+    </span>
+  )}
   <div slot="badge" class="card-badges">
     {status !== 'completed' && (
       <span class:list={['status-badge', statusInfo.class]}>
