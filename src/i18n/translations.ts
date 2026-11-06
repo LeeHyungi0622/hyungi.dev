@@ -11,7 +11,7 @@ export const ui = {
   'hero.sub2': '그 결과에 따른 개선점 또한 기록하여 더 나은 결정을 하기 위한 초석으로 삼습니다.',
   'hero.section': '프로젝트',
   'hero.intro1': '{name} · {title}',
-  'hero.intro2': '주요 결정은 모두 기록합니다.<br />엔지니어는 무언가를 만들기만 하지 않고,<br /><span class="highlight-sweep">그 이유를 설명할 수 있어야 하기 때문입니다.</span>',
+  'hero.intro2': '주요 결정은 모두 기록합니다.<br />엔지니어는 무언가를 만들기만 하지 않고,<br />그 이유를 설명할 수 있어야 하기 때문입니다.',
   'hero.journey': '여정 살펴보기',
   'section.recentDecisions': '의사결정',
   'section.viewAll': '전체 보기',
