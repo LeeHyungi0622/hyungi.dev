@@ -14,9 +14,7 @@ const jdTags = siteConfig.persona === 'aa' ? AA_PROJECT_TAGS[slug] ?? [] : [];
 
 <div class="project-tags">
   {roles.map((r) => <span class="hash-tag">#{r}</span>)}
-  {jdTags.map((tag) => (
-    <span class:list={['hash-tag', 'hash-tag--jd', { 'hash-tag--required': tag.kind === 'required' }]}>#{tag.label}</span>
-  ))}
+  {jdTags.map((tag) => <span class="hash-tag hash-tag--jd">#{tag}</span>)}
 </div>
 
 <style>
@@ -38,11 +36,5 @@ const jdTags = siteConfig.persona === 'aa' ? AA_PROJECT_TAGS[slug] ?? [] : [];
   .hash-tag--jd {
     font-weight: 700;
     color: var(--color-text);
-  }
-
-  .hash-tag--required {
-    padding: 0 0.2rem;
-    background: var(--color-yellow);
-    color: #111111;
   }
 </style>
