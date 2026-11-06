@@ -28,14 +28,14 @@ const totalProjects = sortedProjects.length;
   <SEO
     slot="head"
     title={`${t('projects.heading')} | ${import.meta.env.SITE_AUTHOR_NAME || 'Portfolio'}`}
-    description={intro}
+    description={intro.replace('<br />', ' ')}
     type="website"
   />
 
   <main class="page-container">
     <header class="page-header">
       <h1 class="page-title">{t('projects.heading')}</h1>
-      <p class="page-intro">{intro}</p>
+      <p class="page-intro" set:html={intro} />
       <PageStats text={`${totalProjects} projects`} />
     </header>
 
