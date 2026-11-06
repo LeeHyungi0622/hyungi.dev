@@ -119,7 +119,7 @@ const teamSizeText = teamSize
       <div class="case-study-main">
         <section class="case-study-section">
           <h2>{t('case.overview')}</h2>
-          <p>{overview}</p>
+          <p class="overview-text">{overview}</p>
         </section>
 
         {(architectureImage || architecturePending) && (
@@ -498,6 +498,8 @@ const teamSizeText = teamSize
       left: 0;
       color: var(--color-accent);
     }
+
+    .overview-text { white-space: pre-line; }
 
     .architecture-figure { margin: 2rem 0 0; padding: 0; }
 
