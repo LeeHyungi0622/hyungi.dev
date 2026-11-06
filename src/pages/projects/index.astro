@@ -30,7 +30,6 @@ const sortedProjects = siteConfig.persona === 'aa'
       });
 
 const totalProjects = sortedProjects.length;
-const featuredCount = sortedProjects.filter(p => p.data.featured).length;
 ---
 
 <BaseLayout>
@@ -45,7 +44,7 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
     <header class="page-header">
       <h1 class="page-title">{t('projects.heading')}</h1>
       <p class="page-intro">{t('projects.intro')}</p>
-      <PageStats text={`${totalProjects} projects · ${featuredCount} featured`} />
+      <PageStats text={`${totalProjects} projects`} />
     </header>
 
     {sortedProjects.length > 0 ? (
@@ -58,7 +57,6 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
             outcomeSummary={project.data.outcomeSummary}
             role={project.data.role}
             year={project.data.year}
-            featured={project.data.featured}
             status={project.data.status}
           />
         ))}

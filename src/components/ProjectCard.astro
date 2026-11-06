@@ -4,7 +4,7 @@
  * 
  * Displays a project or case study entry in a card format with year, outcome summary,
  * and hashtags. Extends BaseCard component with project-specific features including
- * an optional featured badge and status indicator.
+ * an optional status indicator.
  * 
  * @component
  * 
@@ -16,7 +16,6 @@
  *   outcomeSummary="Increased conversion rate by 45% and reduced cart abandonment"
  *   role="Lead Frontend Developer"
  *   year={2024}
- *   featured={true}
  *   status="completed"
  * />
  * ```
@@ -33,11 +32,10 @@ interface Props {
   outcomeSummary: string;
   role: string;
   year: number;
-  featured?: boolean;
   status?: 'completed' | 'ongoing' | 'archived';
 }
 
-const { title, slug, category, outcomeSummary, role, year, featured = false, status = 'completed' } = Astro.props;
+const { title, slug, category, outcomeSummary, role, year, status = 'completed' } = Astro.props;
 
 // Status display configuration
 const statusConfig = {
@@ -53,14 +51,6 @@ const statusInfo = statusConfig[status];
     {category}
   </span>
   <div slot="badge" class="card-badges">
-    {featured && (
-      <span class="featured-badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-        </svg>
-        Featured
-      </span>
-    )}
     {status !== 'completed' && (
       <span class:list={['status-badge', statusInfo.class]}>
         {statusInfo.label}
@@ -115,25 +105,6 @@ const statusInfo = statusConfig[status];
 
   .card-badges:empty {
     display: none;
-  }
-
-  .featured-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-size: 0.6875rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text);
-    background: var(--color-yellow);
-    border: 1.5px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
-    padding: 0.25rem 0.5rem;
-  }
-
-  .featured-badge svg {
-    flex-shrink: 0;
   }
 
   .status-badge {
