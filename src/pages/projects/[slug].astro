@@ -26,7 +26,7 @@ const { Content } = await render(project);
 
 const {
   title, category, role, year, duration, teamSize, outcomeSummary,
-  overview, architectureImage, extraArchitectureImages = [], architecturePending, deploymentGuide, problem, constraints, approach,
+  overview, repository, architectureImage, extraArchitectureImages = [], architecturePending, deploymentGuide, problem, constraints, approach,
   keyDecisions, techStack, impact, learnings,
   relatedProjects, relatedDecisions, status,
 } = project.data;
@@ -105,6 +105,12 @@ const teamSizeText = teamSize
         )}
         <span class="meta-separator">·</span>
         <span class="meta-item">{t('common.readingTime').replace('{time}', readingTime)}</span>
+        {repository && (
+          <>
+            <span class="meta-separator">·</span>
+            <a class="meta-item meta-link" href={repository} target="_blank" rel="noopener noreferrer">GitHub 저장소</a>
+          </>
+        )}
       </div>
       <p class="outcome-summary">{outcomeSummary}</p>
     </header>
@@ -355,6 +361,7 @@ const teamSizeText = teamSize
     }
 
     .meta-separator { opacity: 0.5; }
+    .meta-link { color: inherit; text-decoration: underline; }
 
     .outcome-summary {
       font-size: 1.125rem;

@@ -87,6 +87,9 @@ const projectsCollection = defineCollection({
       title: z.string(),
     }).optional(),
 
+    /** Public source repository for the project */
+    repository: z.string().url().optional(),
+
     /** Problem being addressed */
     problem: z.string(),
     
