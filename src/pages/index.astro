@@ -52,6 +52,7 @@ const recentJourney = allJourney
           </div>
           <p class="hero-meta">
             {t('hero.intro1').replace('{name}', siteConfig.author.name).replace('{title}', siteConfig.author.title)}
+            {siteConfig.persona === 'aa' && ' · Application Architect 포지션 지원'}
           </p>
           <div class="hero-intro">
             <p set:html={t('hero.intro2')} />
