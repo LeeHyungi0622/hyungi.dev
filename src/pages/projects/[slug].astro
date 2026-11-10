@@ -10,8 +10,8 @@ import RichText from '../../components/RichText.astro';
 import { getCollection, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '../../utils/readingTime';
 import { t } from '../../i18n';
-import { siteConfig } from '../../config';
 import { formatProjectYears } from '../../lib/projectYears';
+import { persona } from '../../lib/personas';
 
 export async function getStaticPaths() {
   const allProjects = await getCollection('projects');
@@ -76,7 +76,7 @@ const teamSizeText = teamSize
   <main class="case-study">
     <header class="case-study-header">
       <div class="header-badges">
-        {siteConfig.persona !== 'aa' && (
+        {!persona && (
           <span class:list={['category-badge', category === '실무' ? 'category-badge--work' : 'category-badge--personal']}>
             {category}
           </span>

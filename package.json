@@ -22,6 +22,8 @@
     "build": "astro check && astro build",
     "build:aa": "astro check && NODE_ENV=aa astro build --mode aa --outDir dist-aa",
     "deploy:aa": "npm run build:aa && npx wrangler deploy --config wrangler.aa.jsonc",
+    "build:mes": "astro check && NODE_ENV=mes astro build --mode mes --outDir dist-mes",
+    "deploy:mes": "npm run build:mes && npx wrangler deploy --config wrangler.mes.jsonc",
     "preview": "astro preview",
     "astro": "astro"
   },

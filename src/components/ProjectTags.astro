@@ -1,6 +1,5 @@
 ---
-import { siteConfig } from '../config';
-import { AA_PROJECT_TAGS } from '../lib/aaPersona';
+import { persona } from '../lib/personas';
 
 interface Props {
   role: string;
@@ -9,7 +8,7 @@ interface Props {
 
 const { role, slug } = Astro.props;
 const roles = role.split(/,|&/).map((r) => r.trim()).filter(Boolean);
-const jdTags = siteConfig.persona === 'aa' ? AA_PROJECT_TAGS[slug] ?? [] : [];
+const jdTags = persona?.projectTags[slug] ?? [];
 ---
 
 <div class="project-tags">

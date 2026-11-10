@@ -54,11 +54,10 @@ export const siteConfig = {
    * Site persona (build-time variant)
    *
    * 'general' = default data-platform-engineer-framed site.
-   * 'aa' = Application Architect-focused variant (built via `npm run build:aa`,
-   * loading .env.aa) — reorders/filters project case studies toward public-sector
-   * SI / CI-CD / infra-architecture relevance. See src/lib/aaPersona.ts.
+   * 'aa' / 'mes' = job-focused variants (built via `npm run build:aa` / `build:mes`,
+   * loading .env.aa / .env.mes) that show only 실무 case studies. See src/lib/personas.ts.
    */
-  persona: getEnv('SITE_PERSONA', 'general') as 'general' | 'aa',
+  persona: getEnv('SITE_PERSONA', 'general') as 'general' | 'aa' | 'mes',
 
   /**
    * Site language (ISO 639-1 code)

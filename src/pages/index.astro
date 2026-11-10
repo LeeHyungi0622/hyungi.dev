@@ -8,9 +8,10 @@ import { siteConfig } from '../config';
 import { t } from '../i18n';
 import ProjectTags from '../components/ProjectTags.astro';
 import { compareLatestProjects } from '../lib/projectYears';
+import { persona } from '../lib/personas';
 
 const allProjects = await getCollection('projects');
-const featuredProjects = siteConfig.persona === 'aa'
+const featuredProjects = persona
   ? allProjects
       .filter((p) => p.data.category === '실무')
       .sort(compareLatestProjects)
@@ -52,11 +53,11 @@ const recentJourney = allJourney
           </div>
           <p class="hero-meta">
             {t('hero.intro1').replace('{name}', siteConfig.author.name).replace('{title}', siteConfig.author.title)}
-            {siteConfig.persona === 'aa' && ' · Application Architect 포지션 지원'}
+            {persona && ` · ${persona.positionLabel}`}
           </p>
           <div class="hero-intro">
             <p set:html={t('hero.intro2')} />
-            {siteConfig.persona !== 'aa' && (
+            {!persona && (
               <ForwardLink href="/journey" text={t('hero.journey')} variant="muted" />
             )}
           </div>
@@ -70,7 +71,7 @@ const recentJourney = allJourney
           <div class="case-snapshots">
             {featuredProjects.map((project) => (
               <a href={`/projects/${project.id}`} class="case-snapshot">
-                {siteConfig.persona !== 'aa' && (
+                {!persona && (
                   <span class:list={['corner-badge', project.data.category === '실무' ? 'corner-badge--work' : 'corner-badge--personal']}>
                     {project.data.category}
                   </span>
@@ -87,7 +88,7 @@ const recentJourney = allJourney
       </div>
     </section>
 
-    {siteConfig.persona !== 'aa' && (
+    {!persona && (
       <div class="two-col-sections">
         <section class="recent-decisions">
           <div class="section-header">

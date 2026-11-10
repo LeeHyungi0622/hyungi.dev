@@ -1,0 +1,12 @@
+{
+  // MES persona worker — separate from "hyungi-dev" and "hyungi-dev-aa",
+  // serving the ./dist-mes build (produced by `npm run build:mes`).
+  // The custom_domain route binds mes.hyungi.dev on deploy; the hyungi.dev zone
+  // must be in the same Cloudflare account.
+  "name": "hyungi-dev-mes",
+  "compatibility_date": "2026-07-07",
+  "routes": [{ "pattern": "mes.hyungi.dev", "custom_domain": true }],
+  "assets": {
+    "directory": "./dist-mes"
+  }
+}

@@ -1,6 +1,5 @@
 ---
-import { siteConfig } from '../config';
-import { AA_HIDDEN_HREFS } from '../lib/aaPersona';
+import { persona } from '../lib/personas';
 
 const currentPath = Astro.url.pathname;
 
@@ -14,9 +13,8 @@ const allNavItems = [
   { label: '연락처', href: '/contact' },
 ];
 
-const navItems = siteConfig.persona === 'aa'
-  ? allNavItems.filter((item) => !AA_HIDDEN_HREFS.includes(item.href))
-  : allNavItems;
+const hiddenHrefs = persona?.hiddenHrefs ?? [];
+const navItems = allNavItems.filter((item) => !hiddenHrefs.includes(item.href));
 
 const isActive = (href: string) => {
   if (href === '/') return currentPath === '/';
