@@ -1,4 +1,5 @@
 ---
+import { getProjects } from '../lib/projects';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SEO from '../components/SEO.astro';
 import StructuredData from '../components/StructuredData.astro';
@@ -11,7 +12,7 @@ import { compareLatestProjects } from '../lib/projectYears';
 import { persona } from '../lib/personas';
 import ExperienceHighlights from '../components/ExperienceHighlights.astro';
 
-const allProjects = await getCollection('projects');
+const allProjects = await getProjects();
 const featuredProjects = persona
   ? allProjects
       .filter((p) => p.data.category === '실무')

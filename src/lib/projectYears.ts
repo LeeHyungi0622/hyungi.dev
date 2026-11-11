@@ -1,4 +1,4 @@
-import type { CollectionEntry } from 'astro:content';
+import type { ProjectEntry } from './projects';
 import { PERSONAS, persona } from './personas';
 
 const tieBreakOrder = (persona ?? PERSONAS.aa).projectOrder;
@@ -13,7 +13,7 @@ export function latestProjectYear(data: { year: number; endYear?: number }): num
   return data.endYear ?? data.year;
 }
 
-export function compareLatestProjects(a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>): number {
+export function compareLatestProjects(a: ProjectEntry, b: ProjectEntry): number {
   return pinRank(a.id) - pinRank(b.id)
     || latestProjectYear(b.data) - latestProjectYear(a.data)
     || b.data.year - a.data.year

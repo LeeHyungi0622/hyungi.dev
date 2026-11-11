@@ -1,14 +1,14 @@
 ---
+import { getProjects } from '../../lib/projects';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SEO from '../../components/SEO.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import PageStats from '../../components/PageStats.astro';
-import { getCollection } from 'astro:content';
 import { t } from '../../i18n';
 import { compareLatestProjects, formatProjectYears } from '../../lib/projectYears';
 import { persona } from '../../lib/personas';
 
-const allProjects = await getCollection('projects');
+const allProjects = await getProjects();
 
 // 실무 + Featured 프로젝트를 최우선으로 선배치
 function priorityRank(p: (typeof allProjects)[number]): number {

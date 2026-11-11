@@ -16,6 +16,7 @@
  * ```
  */
 
+import { getProjects } from '../lib/projects';
 import { getCollection } from 'astro:content';
 import { formatProjectYears } from '../lib/projectYears';
 
@@ -31,7 +32,7 @@ const {
   title = "Related",
 } = Astro.props;
 
-const allProjects = await getCollection('projects');
+const allProjects = await getProjects();
 const allDecisions = await getCollection('decisions');
 
 const projects = relatedProjects

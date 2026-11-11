@@ -1,4 +1,5 @@
 ---
+import { getProjects } from '../../lib/projects';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SEO from '../../components/SEO.astro';
 import StructuredData from '../../components/StructuredData.astro';
@@ -7,14 +8,14 @@ import BackLink from '../../components/BackLink.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import ImpactMetrics from '../../components/ImpactMetrics.astro';
 import RichText from '../../components/RichText.astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '../../utils/readingTime';
 import { t } from '../../i18n';
 import { formatProjectYears } from '../../lib/projectYears';
 import { persona } from '../../lib/personas';
 
 export async function getStaticPaths() {
-  const allProjects = await getCollection('projects');
+  const allProjects = await getProjects();
   return allProjects.map((project) => ({
     params: { slug: project.id },
     props: { project },

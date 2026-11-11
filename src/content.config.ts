@@ -36,9 +36,7 @@ import { glob } from 'astro/loaders';
  * - Optional custom order for manual curation
  * - Related project and decision slugs for cross-referencing
  */
-const projectsCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
-  schema: z.object({
+const projectSchema = z.object({
     /** Project title */
     title: z.string(),
 
@@ -137,8 +135,19 @@ const projectsCollection = defineCollection({
     
     /** Related decision slugs for cross-referencing */
     relatedDecisions: z.array(z.string()).optional(),
-  }),
+  });
+
+const projectsCollection = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
+  schema: projectSchema,
 });
+
+/** MES-site replacements for shared case studies (same file name = same project id) */
+const projectsMesCollection = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/projects-mes' }),
+  schema: projectSchema,
+});
+
 
 /**
  * Decisions Collection
@@ -333,6 +342,7 @@ const testimonialsCollection = defineCollection({
  */
 export const collections = {
   projects: projectsCollection,
+  projectsMes: projectsMesCollection,
   decisions: decisionsCollection,
   journey: journeyCollection,
   writing: writingCollection,
