@@ -9,6 +9,7 @@ import { t } from '../i18n';
 import ProjectTags from '../components/ProjectTags.astro';
 import { compareLatestProjects } from '../lib/projectYears';
 import { persona } from '../lib/personas';
+import ExperienceHighlights from '../components/ExperienceHighlights.astro';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = persona
@@ -87,6 +88,8 @@ const recentJourney = allJourney
         </div>
       </div>
     </section>
+
+    {persona?.experience && <ExperienceHighlights {...persona.experience} />}
 
     {!persona && (
       <div class="two-col-sections">

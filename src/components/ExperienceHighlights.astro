@@ -1,0 +1,150 @@
+---
+import type { ExperienceItem } from '../lib/personas';
+
+interface Props {
+  heading: string;
+  intro: string;
+  items: ExperienceItem[];
+  fieldWork?: string;
+}
+
+const { heading, intro, items, fieldWork } = Astro.props;
+---
+
+<section class="experience">
+  <h2>{heading}</h2>
+  <p class="experience-intro">{intro}</p>
+  <div class="experience-grid">
+    {items.map((item) => (
+      <article class="experience-card">
+        <span class="experience-meta">{item.company} · {item.role} · {item.period}</span>
+        <h3>{item.title}</h3>
+        <dl>
+          <dt>Problem</dt>
+          <dd>{item.problem}</dd>
+          <dt>Approach</dt>
+          <dd>{item.approach}</dd>
+        </dl>
+        <div class="experience-impact">
+          <strong>{item.impact.value}</strong>
+          <span>{item.impact.label}</span>
+        </div>
+        <div class="experience-tags">
+          {item.tags.map((tag) => <span>#{tag}</span>)}
+        </div>
+      </article>
+    ))}
+  </div>
+  {fieldWork && <p class="experience-field">{fieldWork}</p>}
+</section>
+
+<style>
+  .experience {
+    padding: 1rem 0 3rem;
+  }
+
+  .experience h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .experience-intro {
+    margin: 0 0 1.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+  }
+
+  .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .experience-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-bg);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-hard-sm);
+  }
+
+  .experience-meta {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .experience-card h3 {
+    margin: 0.5rem 0 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .experience-card dl {
+    margin: 0;
+  }
+
+  .experience-card dt {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .experience-card dd {
+    margin: 0.125rem 0 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .experience-impact {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1.5px solid var(--color-border-subtle);
+  }
+
+  .experience-impact strong {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-text);
+  }
+
+  .experience-impact span {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .experience-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.125rem 0.625rem;
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .experience-field {
+    margin: 1.5rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 1024px) {
+    .experience-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
