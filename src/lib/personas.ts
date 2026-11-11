@@ -48,7 +48,19 @@ export const PERSONAS: Record<PersonaId, PersonaConfig> = {
       'pley-child-behavior',
     ],
     hiddenHrefs: ['/writing', '/journey', '/decisions'],
-    projectTags: {},
+    projectTags: {
+      'ai-smart-plant': [
+        '스마트플랜트(설비모니터링)',
+        'Java웹(JSP/Spring)',
+        'MSSQL·PostgreSQL',
+        '설비데이터수집(PI)',
+        '현장설치·실증',
+      ],
+      'v2x-patrol-car': ['Java/SpringBoot', '외부시스템I/F(ASN.1)', '현장테스트'],
+      'infra-cicd-airflow': ['시스템아키텍처설계', '이종시스템연계(SMB)'],
+      'hadoop-enterprise-platform': ['DB적재최적화', '저장소성능비교'],
+      'pley-child-behavior': ['PostgreSQL', '외부API연동'],
+    },
   },
 };
 
