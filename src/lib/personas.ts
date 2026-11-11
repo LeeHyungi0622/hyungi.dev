@@ -18,6 +18,8 @@ interface PersonaConfig {
   positionLabel: string;
   /** Relevance order used to break ties when projects are sorted latest-first */
   projectOrder: string[];
+  /** Projects shown first, ahead of the latest-first order */
+  pinnedProjects?: string[];
   /** Nav items and homepage sections hidden on this build */
   hiddenHrefs: string[];
   /** JD 항목별 태그. 케이스 스터디에 근거가 있는 항목만 추가한다. */
@@ -53,6 +55,7 @@ export const PERSONAS: Record<PersonaId, PersonaConfig> = {
   },
   mes: {
     positionLabel: 'MES 개발자 포지션 지원',
+    pinnedProjects: ['ai-smart-plant'],
     projectOrder: [
       'ai-smart-plant',
       'infra-cicd-airflow',
@@ -65,6 +68,7 @@ export const PERSONAS: Record<PersonaId, PersonaConfig> = {
       'ai-smart-plant': [
         '스마트플랜트(설비모니터링)',
         'Java웹(JSP/Spring)',
+        'UI/UX설계',
         'MSSQL·PostgreSQL',
         '설비데이터수집(PI)',
         '현장설치·실증',
